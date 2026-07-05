@@ -1,0 +1,189 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/quicksand';
+
+@theme inline {
+  --font-sans: 'Quicksand Variable', sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* ===== COLORS ===== */
+  /* Neutral */
+  --color-neutral-25: #fdfdfd;
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e9eaeb;
+  --color-neutral-300: #d5d7da;
+  --color-neutral-400: #a4a7ae;
+  --color-neutral-500: #717680;
+  --color-neutral-600: #535862;
+  --color-neutral-700: #414651;
+  --color-neutral-800: #252b37;
+  --color-neutral-900: #181d27;
+  --color-neutral-950: #0a0d12;
+
+  /* Primary */
+  --color-primary-100: #f6f9fe;
+  --color-primary-150: #e0ecff;
+  --color-primary-200: #d2e3ff;
+  --color-primary-300: #1c65da;
+
+  /* Accent */
+  --color-accent-red: #d9206e;
+  --color-accent-green: #079455;
+  --color-accent-yellow: #fdb022;
+
+  /* Status */
+  --color-danger: #ee1d52;
+  --color-success: #24a500;
+  --color-warning: #ffab0d;
+
+  /* Base */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* ===== RADIUS ===== */
+  --radius-none: 0px;
+  --radius-xxs: 2px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-4xl: 24px;
+  --radius-full: 9999px;
+
+  /* ===== SPACING ===== */
+  --spacing-none: 0px;
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-sm: 6px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
+  --spacing-2xl: 20px;
+  --spacing-3xl: 24px;
+  --spacing-4xl: 32px;
+  --spacing-5xl: 40px;
+  --spacing-6xl: 48px;
+  --spacing-7xl: 64px;
+  --spacing-8xl: 80px;
+  --spacing-9xl: 96px;
+  --spacing-10xl: 128px;
+  --spacing-11xl: 140px;
+
+  /* ===== LETTER SPACING ===== */
+  --tracking-t-none: 0em;
+  --tracking-t-2: -0.02em;
+  --tracking-t-3: -0.03em;
+
+  /* ===== TYPOGRAPHY ===== */
+  --text-xs: 12px;
+  --text-xs--line-height: 24px;
+
+  --text-sm: 14px;
+  --text-sm--line-height: 28px;
+
+  --text-md: 16px;
+  --text-md--line-height: 30px;
+
+  --text-lg: 18px;
+  --text-lg--line-height: 32px;
+
+  --text-xl: 20px;
+  --text-xl--line-height: 34px;
+
+  --text-display-xs: 24px;
+  --text-display-xs--line-height: 36px;
+
+  --text-display-sm: 28px;
+  --text-display-sm--line-height: 38px;
+
+  --text-display-md: 32px;
+  --text-display-md--line-height: 42px;
+
+  --text-display-lg: 36px;
+  --text-display-lg--line-height: 44px;
+
+  --text-display-xl: 40px;
+  --text-display-xl--line-height: 48px;
+
+  --text-display-2xl: 48px;
+  --text-display-2xl--line-height: 60px;
+
+  --text-display-3xl: 60px;
+  --text-display-3xl--line-height: 72px;
+
+  /* ===== SHADOW ===== */
+  --shadow-card: 0px 0px 10px rgba(203, 202, 202, 0.25);
+  --shadow-navbar: 0px 0px 20px rgba(203, 202, 202, 0.25);
+}
+
+@utility hover-dim {
+  &:hover {
+    opacity: 0.9;
+    cursor: pointer;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@utility hover-dark {
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+@utility hover-scale-102 {
+  &:hover {
+    scale: 1.02;
+  }
+}
+
+@utility hover-scale-105 {
+  &:hover {
+    scale: 1.05;
+  }
+}
+
+@utility hover-primary-300 {
+  &:hover {
+    color: var(--color-primary-300);
+  }
+}
+
+@utility icon-mask {
+  background-color: var(--color-neutral-950);
+  transition: background-color 300ms;
+  mask-image: var(--icon-url);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: var(--icon-url);
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+
+  .social-link:hover & {
+    background-color: var(--color-primary-300);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-(--color-neutral-200);
+  }
+  body {
+    @apply bg-(--color-white) text-(--color-neutral-900);
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  .custom-container {
+    @apply w-full max-w-360 min-w-98.25 mx-auto px-4 md:px-[clamp(16px,calc(-102.86px+15.476vw),120px)];
+  }
+}
