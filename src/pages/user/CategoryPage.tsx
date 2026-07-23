@@ -14,6 +14,7 @@ import {
 import { getBooksByCategory } from '@/lib/api/books';
 import { getCategories } from '@/lib/api/categories';
 import { HOME_CATEGORY_ORDER } from '@/lib/categoryIcons';
+import { queryKeys } from '@/lib/queryKeys';
 import filterLinesIcon from '@/assets/icons/filter-lines.svg';
 
 export default function CategoryPage() {
@@ -23,12 +24,12 @@ export default function CategoryPage() {
   const [minRating, setMinRating] = useState<number | undefined>(undefined);
 
   const { data: categories } = useQuery({
-    queryKey: ['categories'],
+    queryKey: queryKeys.categories.all,
     queryFn: getCategories,
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['books', 'category', categoryId, minRating],
+    queryKey: queryKeys.books.category(categoryId, minRating),
     queryFn: () => getBooksByCategory(categoryId, { minRating }),
     enabled: !!categoryId,
   });

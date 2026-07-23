@@ -1,44 +1,41 @@
 import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { toast } from 'sonner';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog, DialogPortal, DialogOverlay, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import xCloseIcon from '@/assets/icons/x-close.svg';
-import { addReview } from '@/lib/api/reviews';
+import { useUpsertReviewMutation } from '@/features/reviews/useReviewMutations';
 
 interface GiveReviewModalProps {
   bookId: number | null;
+  initialReview?: { star: number; comment: string } | null;
   onOpenChange: (open: boolean) => void;
 }
 
-export default function GiveReviewModal({ bookId, onOpenChange }: GiveReviewModalProps) {
-  const queryClient = useQueryClient();
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+export default function GiveReviewModal({ bookId, initialReview, onOpenChange }: GiveReviewModalProps) {
+  const isEditing = !!initialReview;
+  const [rating, setRating] = useState(initialReview?.star ?? 0);
+  const [comment, setComment] = useState(initialReview?.comment ?? '');
 
-  const { mutate: submit, isPending } = useMutation({
-    mutationFn: () => addReview(bookId!, { star: rating, comment }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reviews', 'my'] });
-      queryClient.invalidateQueries({ queryKey: ['reviews', bookId] });
-      toast.success('Review submitted.');
-      setRating(0);
-      setComment('');
-      onOpenChange(false);
-    },
-    onError: () => {
-      toast.error('Failed to submit review. Please try again.');
-    },
-  });
+  const { mutate: submit, isPending } = useUpsertReviewMutation(bookId);
 
   const handleSubmit = () => {
     if (rating === 0 || comment.trim().length === 0) {
       toast.error('Please add a rating and comment.');
       return;
     }
-    submit();
+    submit(
+      { star: rating, comment },
+      {
+        onSuccess: () => {
+          toast.success(isEditing ? 'Review updated.' : 'Review submitted.');
+          setRating(0);
+          setComment('');
+          onOpenChange(false);
+        },
+      }
+    );
   };
 
   return (
@@ -52,7 +49,7 @@ export default function GiveReviewModal({ bookId, onOpenChange }: GiveReviewModa
           {/* Header */}
           <div className="flex items-center justify-between w-full">
             <p className="font-bold md:font-extrabold text-neutral-950 tracking-t-3 md:tracking-t-none text-lg md:text-display-xs">
-              Give Review
+              {isEditing ? 'Edit Review' : 'Give Review'}
             </p>
             <button type="button" onClick={() => onOpenChange(false)} className="cursor-pointer shrink-0 size-6">
               <img src={xCloseIcon} alt="Close" className="size-6" />

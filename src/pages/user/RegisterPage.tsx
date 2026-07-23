@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import logoBooky from '@/assets/images/logo-booky.png';
-import { registerApi } from '@/features/auth/api';
+import { registerApi, loginApi } from '@/features/auth/api';
 import { setCredentials } from '@/features/auth/authSlice';
+import { getErrorMessage } from '@/lib/utils';
 import InputField from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { FadeInUp } from '@/components/common/StaggeredItems';
@@ -23,15 +24,19 @@ export default function RegisterPage() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const { mutate: register, isPending } = useMutation({
-    mutationFn: () =>
-      registerApi({ name, email, phone, password, confirmPassword }),
+    mutationFn: async () => {
+      await registerApi({ name, email, phone, password, confirmPassword });
+      // Register doesn't return a session token, so log in right after
+      // with the same credentials to get one.
+      return loginApi(email, password);
+    },
     onSuccess: (data) => {
       dispatch(setCredentials({ user: data.user, token: data.token }));
       navigate('/');
     },
-    onError: () => {
+    onError: (error) => {
       setErrorMsg(
-        'Registration failed. Please check your details and try again.'
+        getErrorMessage(error, 'Registration failed. Please check your details and try again.')
       );
     },
   });

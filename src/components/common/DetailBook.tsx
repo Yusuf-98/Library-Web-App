@@ -94,7 +94,7 @@ export default function DetailBook({
                   {book.availableCopies}
                 </span>
                 <span className='font-medium text-neutral-950 tracking-t-3 text-sm md:text-[clamp(14px,calc(11.71px+0.298vw),16px)]'>
-                  Page
+                  Stock
                 </span>
               </div>
               <div className='w-px self-stretch bg-neutral-300' />

@@ -19,6 +19,8 @@ import {
   deleteBook,
   type AdminBooksParams,
 } from '@/lib/api/books';
+import { queryKeys } from '@/lib/queryKeys';
+import { getErrorMessage } from '@/lib/utils';
 import starIcon from '@/assets/icons/star-24.svg';
 import moreIcon from '@/assets/icons/more.svg';
 
@@ -43,7 +45,7 @@ export default function AdminBookListPage() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'books', status, query, page],
+    queryKey: queryKeys.admin.books.list(status, query, page),
     queryFn: () =>
       getAdminBooks({ status, q: query || undefined, page, limit: 10 }),
   });
@@ -51,12 +53,12 @@ export default function AdminBookListPage() {
   const { mutate: confirmDelete, isPending: isDeleting } = useMutation({
     mutationFn: (id: number) => deleteBook(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'books'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.books.all });
       toast.success('Book deleted.');
       setDeleteId(null);
     },
-    onError: () => {
-      toast.error('Failed to delete book. It may still have active loans.');
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Failed to delete book. It may still have active loans.'));
     },
   });
 

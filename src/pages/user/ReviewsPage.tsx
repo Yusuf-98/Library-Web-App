@@ -4,6 +4,7 @@ import CardMyReview from '@/components/user/CardMyReview';
 import { FadeInUp, FadeIn } from '@/components/common/StaggeredItems';
 import { getMyReviews } from '@/lib/api/reviews';
 import { formatReviewDate } from '@/lib/utils';
+import { queryKeys } from '@/lib/queryKeys';
 import searchIcon from '@/assets/icons/search.svg';
 
 export default function ReviewsPage() {
@@ -14,7 +15,7 @@ export default function ReviewsPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['reviews', 'my'],
+    queryKey: queryKeys.reviews.my,
     queryFn: getMyReviews,
   });
 

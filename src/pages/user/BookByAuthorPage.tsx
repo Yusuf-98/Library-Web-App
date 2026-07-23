@@ -5,6 +5,7 @@ import CardBook from '@/components/common/CardBook';
 import CardAuthor from '@/components/common/CardAuthor';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { getBooksByAuthor } from '@/lib/api/authors';
+import { queryKeys } from '@/lib/queryKeys';
 
 export default function BookByAuthorPage() {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +13,7 @@ export default function BookByAuthorPage() {
   const navigate = useNavigate();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['books', 'author', authorId],
+    queryKey: queryKeys.books.author(authorId),
     queryFn: () => getBooksByAuthor(authorId),
     enabled: !!authorId,
   });

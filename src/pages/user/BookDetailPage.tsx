@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAppSelector } from '@/app/hooks';
 import { getCart } from '@/lib/api/cart';
 import { getBookById } from '@/lib/api/books';
+import { queryKeys } from '@/lib/queryKeys';
 import Footer from '@/components/shared/Footer';
 import CoverInfoSection from '@/components/sections/book-detail/CoverInfoSection';
 import { FadeInUp } from '@/components/common/StaggeredItems';
@@ -19,7 +20,7 @@ export default function BookDetailPage() {
   const isLoggedIn = !!user;
 
   const { data: cart } = useQuery({
-    queryKey: ['cart'],
+    queryKey: queryKeys.cart.all,
     queryFn: getCart,
     enabled: isLoggedIn,
   });
@@ -30,7 +31,7 @@ export default function BookDetailPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['books', 'detail', bookId],
+    queryKey: queryKeys.books.detail(bookId),
     queryFn: () => getBookById(bookId),
     enabled: !!bookId,
   });

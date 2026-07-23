@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import logoBooky from '@/assets/images/logo-booky.png';
 import { loginApi } from '@/features/auth/api';
 import { setCredentials } from '@/features/auth/authSlice';
+import { getErrorMessage } from '@/lib/utils';
 import InputField from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { FadeInUp } from '@/components/common/StaggeredItems';
@@ -24,8 +25,8 @@ export default function LoginPage() {
       dispatch(setCredentials({ user: data.user, token: data.token }));
       navigate(data.user.role === 'ADMIN' ? '/admin/books' : '/');
     },
-    onError: () => {
-      setErrorMsg('Invalid email or password. Please try again.');
+    onError: (error) => {
+      setErrorMsg(getErrorMessage(error, 'Invalid email or password. Please try again.'));
     },
   });
 

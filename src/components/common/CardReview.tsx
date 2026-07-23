@@ -8,6 +8,7 @@ interface CardReviewProps {
   date: string;
   comment: string;
   isOwn?: boolean;
+  onEdit?: () => void;
   onDelete?: () => void;
   className?: string;
 }
@@ -19,6 +20,7 @@ export default function CardReview({
   date,
   comment,
   isOwn,
+  onEdit,
   onDelete,
   className,
 }: CardReviewProps) {
@@ -46,13 +48,22 @@ export default function CardReview({
           </p>
         </div>
         {isOwn && (
-          <button
-            type="button"
-            onClick={onDelete}
-            className="cursor-pointer text-sm font-semibold text-accent-red tracking-t-2 shrink-0"
-          >
-            Delete
-          </button>
+          <div className="flex items-center gap-md shrink-0">
+            <button
+              type="button"
+              onClick={onEdit}
+              className="cursor-pointer text-sm font-semibold text-primary-300 tracking-t-2"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={onDelete}
+              className="cursor-pointer text-sm font-semibold text-accent-red tracking-t-2"
+            >
+              Delete
+            </button>
+          </div>
         )}
       </div>
 

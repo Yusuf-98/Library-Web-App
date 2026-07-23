@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { CartItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import DatePicker from '@/components/ui/date-picker';
 import { cn, formatLongDate } from '@/lib/utils';
-import { borrowFromCart } from '@/lib/api/cart';
+import { useBorrowMutation } from '@/features/checkout/useBorrowMutation';
 import checkIcon from '@/assets/icons/check.svg';
 
 const DURATIONS: (3 | 5 | 10)[] = [3, 5, 10];
@@ -33,10 +31,6 @@ interface BorrowFormSectionProps {
 }
 
 export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const itemIds = items.map((i) => i.id);
-
   const [borrowDate, setBorrowDate] = useState(todayISO());
   const [days, setDays] = useState<3 | 5 | 10>(3);
   const [agreeReturn, setAgreeReturn] = useState(false);
@@ -48,35 +42,7 @@ export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
     return d.toISOString().slice(0, 10);
   }, [borrowDate, days]);
 
-  const { mutate: confirmBorrow, isPending } = useMutation({
-    mutationFn: () => borrowFromCart(itemIds, days, borrowDate),
-    onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-
-      if (result.loans.length === 0) {
-        toast.error(
-          result.failed[0]?.reason ??
-            'Failed to borrow. Please try again.'
-        );
-        return;
-      }
-
-      if (result.failed.length > 0) {
-        toast.error(
-          `${result.failed.length} book(s) could not be borrowed: ${result.failed
-            .map((f) => f.reason)
-            .join(', ')}`
-        );
-      }
-
-      navigate('/checkout/success', {
-        state: { itemCount: result.loans.length, returnDate },
-      });
-    },
-    onError: () => {
-      toast.error('Failed to confirm borrow request. Please try again.');
-    },
-  });
+  const { mutate: confirmBorrow, isPending } = useBorrowMutation(items);
 
   const canSubmit =
     items.length > 0 && agreeReturn && agreePolicy && !isPending;
@@ -87,7 +53,7 @@ export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
       toast.error('Please agree to both terms before continuing.');
       return;
     }
-    confirmBorrow();
+    confirmBorrow({ days, borrowDate });
   };
 
   return (

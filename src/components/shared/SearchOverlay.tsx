@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { closeSearch, setSearchQuery } from '@/features/ui/uiSlice';
 import { getBooks } from '@/lib/api/books';
+import { queryKeys } from '@/lib/queryKeys';
 import CardBook from '@/components/common/CardBook';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import logoBooky from '@/assets/images/logo-booky.png';
@@ -17,8 +18,8 @@ export default function SearchOverlay() {
 
   const visible = isSearchOpen || searchQuery.trim().length > 0;
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['books', 'search', searchQuery],
+  const { data, isLoading, isError } = useQuery({
+    queryKey: queryKeys.books.search(searchQuery),
     queryFn: () => getBooks({ q: searchQuery }),
     enabled: searchQuery.trim().length > 0,
   });
@@ -62,13 +63,19 @@ export default function SearchOverlay() {
           </div>
         )}
 
-        {!isLoading && searchQuery.trim().length > 0 && books.length === 0 && (
+        {isError && (
+          <p className="text-sm font-medium text-accent-red tracking-t-2 text-center mt-10">
+            Failed to search books. Please try again.
+          </p>
+        )}
+
+        {!isLoading && !isError && searchQuery.trim().length > 0 && books.length === 0 && (
           <p className="text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10">
             No books found for "{searchQuery}"
           </p>
         )}
 
-        {books.length > 0 && (
+        {!isError && books.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2xl">
             {books.map((book, index) => (
               <FadeInUp key={book.id} delay={(index % 5) * 250}>

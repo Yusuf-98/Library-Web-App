@@ -4,6 +4,7 @@ import CardBook from '@/components/common/CardBook';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { Button } from '@/components/ui/button';
 import { getBooks } from '@/lib/api/books';
+import { queryKeys } from '@/lib/queryKeys';
 import { SectionLoading, SectionError } from './SectionState';
 
 export default function RecommendationSection() {
@@ -17,7 +18,7 @@ export default function RecommendationSection() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['books', 'home'],
+    queryKey: queryKeys.books.home,
     queryFn: ({ pageParam }) => getBooks({ limit: 10, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>

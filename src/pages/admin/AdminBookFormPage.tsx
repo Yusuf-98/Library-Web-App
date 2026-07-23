@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getBookById, createBook, updateBook } from '@/lib/api/books';
 import { getCategories } from '@/lib/api/categories';
 import { HOME_CATEGORY_ORDER } from '@/lib/categoryIcons';
+import { queryKeys } from '@/lib/queryKeys';
+import { getErrorMessage } from '@/lib/utils';
 import CoverImageSection from '@/components/sections/admin-book-form/CoverImageSection';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import arrowBackIcon from '@/assets/icons/arrow-back.svg';
@@ -21,14 +23,14 @@ export default function AdminBookFormPage() {
   const queryClient = useQueryClient();
 
   const { data: categories } = useQuery({
-    queryKey: ['categories'],
+    queryKey: queryKeys.categories.all,
     queryFn: getCategories,
   });
   const filteredCategories = (categories ?? []).filter((c) =>
     HOME_CATEGORY_ORDER.includes(c.name)
   );
   const { data: existingBook, isLoading: isLoadingBook } = useQuery({
-    queryKey: ['books', 'detail', bookId],
+    queryKey: queryKeys.books.detail(bookId),
     queryFn: () => getBookById(bookId),
     enabled: isEdit,
   });
@@ -96,17 +98,20 @@ export default function AdminBookFormPage() {
       return isEdit ? updateBook(bookId, payload) : createBook(payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'books'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.books.all });
       if (isEdit)
         queryClient.invalidateQueries({
-          queryKey: ['books', 'detail', bookId],
+          queryKey: queryKeys.books.detail(bookId),
         });
       toast.success(isEdit ? 'Edit Success' : 'Add Success');
       navigate('/admin/books');
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(
-        `Failed to ${isEdit ? 'update' : 'add'} book. Please check the fields and try again.`
+        getErrorMessage(
+          error,
+          `Failed to ${isEdit ? 'update' : 'add'} book. Please check the fields and try again.`
+        )
       );
     },
   });

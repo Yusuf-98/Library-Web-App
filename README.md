@@ -1,73 +1,76 @@
-# React + TypeScript + Vite - Yusuf AR
+# Library Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend aplikasi perpustakaan (peminjaman buku online) — dibuat dengan React + TypeScript + Vite. Backend REST API terpisah (Node.js), diakses lewat `VITE_API_URL`.
 
-Currently, two official plugins are available:
+## Fitur
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**User**
+- Login / register
+- Browse buku: home, kategori, halaman penulis, pencarian (search overlay)
+- Detail buku, cart, checkout, dan riwayat peminjaman (loans)
+- Review buku: buat, edit, dan hapus review
+- Profile: lihat & update data diri, statistik peminjaman
 
-## React Compiler
+**Admin**
+- Kelola buku (CRUD), lihat daftar user, kelola daftar peminjaman (tandai dikembalikan)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Routing membedakan tiga tingkat akses: halaman publik, halaman yang butuh login (`ProtectedRoute`), dan halaman admin (`AdminRoute`) — lihat [src/App.tsx](src/App.tsx).
 
-## Expanding the ESLint configuration
+## Menjalankan Proyek
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Buat file `.env` di root proyek berisi URL backend:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
 ```
+VITE_API_URL=https://your-backend-host/api
+```
+
+Lalu jalankan dev server:
+
+```bash
+npm run dev
+```
+
+Script yang tersedia:
+
+| Command | Keterangan |
+| --- | --- |
+| `npm run dev` | Menjalankan dev server (Vite) |
+| `npm run build` | Type-check (`tsc -b`) lalu build production |
+| `npm run lint` | Menjalankan ESLint |
+| `npm run preview` | Preview hasil build production |
+
+## Struktur Folder
+
+```
+src/
+├── app/            # Redux store + typed hooks (useAppDispatch/useAppSelector)
+├── components/
+│   ├── admin/      # Komponen khusus halaman admin
+│   ├── common/     # Komponen reusable lintas halaman (card, detail, dsb.)
+│   ├── layouts/    # Layout shell (UserLayout, AdminLayout, dst.)
+│   ├── sections/   # Blok komponen spesifik per halaman (home, checkout, book-detail, dst.)
+│   ├── shared/     # Navbar, Footer, ProtectedRoute/AdminRoute, SearchOverlay
+│   └── ui/         # Primitive UI (button, dialog, select, dst. — shadcn-based)
+├── features/       # State & data hook per domain fitur: auth, ui (slice Redux), cart, checkout, profile, reviews (hook query/mutation)
+├── hooks/          # Custom hook generic/UI-only, lintas domain (useImageError, useInView)
+├── lib/
+│   ├── api/        # Semua pemanggilan REST API, dikelompokkan per resource
+│   ├── queryKeys.ts  # Query key TanStack Query yang tersentralisasi
+│   └── ...         # axios instance, utils, category icons, dst.
+├── pages/
+│   ├── user/       # Halaman untuk pengguna umum
+│   └── admin/      # Halaman untuk admin
+└── types/          # Tipe data bersama (Book, User, Loan, Review, dst.)
+```
+
+## Stack
+
+- React 19 + TypeScript + Vite
+- TanStack Query untuk server state (fetching, caching, mutation)
+- Redux Toolkit untuk auth/UI state
+- React Router untuk routing
+- Tailwind CSS + Radix UI (shadcn) untuk styling & komponen UI

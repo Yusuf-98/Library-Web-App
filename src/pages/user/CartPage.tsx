@@ -5,6 +5,8 @@ import { toast } from 'sonner';
 import Footer from '@/components/shared/Footer';
 import { Button } from '@/components/ui/button';
 import { getCart, removeCartItem } from '@/lib/api/cart';
+import { queryKeys } from '@/lib/queryKeys';
+import { getErrorMessage } from '@/lib/utils';
 import CartItemListSection from '@/components/sections/cart/CartItemListSection';
 import CartSummaryPanel from '@/components/sections/cart/CartSummaryPanel';
 import CartMobileSummaryBar from '@/components/sections/cart/CartMobileSummaryBar';
@@ -19,7 +21,7 @@ export default function CartPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['cart'],
+    queryKey: queryKeys.cart.all,
     queryFn: getCart,
   });
 
@@ -34,11 +36,11 @@ export default function CartPage() {
   const { mutate: removeItem } = useMutation({
     mutationFn: (itemId: number) => removeCartItem(itemId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart.all });
       toast.success('Removed from cart.');
     },
-    onError: () => {
-      toast.error('Failed to remove item. Please try again.');
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Failed to remove item. Please try again.'));
     },
   });
 

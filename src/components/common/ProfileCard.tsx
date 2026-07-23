@@ -1,21 +1,14 @@
 import { useRef, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import InputField from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
-import { useAppDispatch } from '@/app/hooks';
 import { useImageError } from '@/hooks/useImageError';
-import { getMyProfile, updateMyProfile } from '@/lib/api/users';
-import { updateUser } from '@/features/auth/authSlice';
+import { useMyProfile, useUpdateProfileMutation } from '@/features/profile/useProfile';
 
 interface ProfileCardProps {
   idPrefix?: string;
 }
 
 export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) {
-  const dispatch = useAppDispatch();
-  const queryClient = useQueryClient();
-
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -24,10 +17,7 @@ export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) 
   const [showAvatarTooltip, setShowAvatarTooltip] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['me'],
-    queryFn: getMyProfile,
-  });
+  const { data, isLoading, isError } = useMyProfile();
 
   const profile = data?.profile;
   const loanStats = data?.loanStats;
@@ -54,29 +44,14 @@ export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) 
     setPhotoPreview(URL.createObjectURL(file));
   };
 
-  const { mutate: saveProfile, isPending } = useMutation({
-    mutationFn: () =>
-      updateMyProfile({
-        name,
-        phone,
-        ...(photoFile ? { profilePhoto: photoFile } : {}),
-      }),
-    onSuccess: (updated) => {
-      dispatch(
-        updateUser({
-          name: updated.name,
-          phone: updated.phone,
-          profilePhoto: updated.profilePhoto,
-        })
-      );
-      queryClient.invalidateQueries({ queryKey: ['me'] });
-      toast.success('Profile updated successfully.');
-      setIsEditing(false);
-    },
-    onError: () => {
-      toast.error('Failed to update profile. Please try again.');
-    },
-  });
+  const { mutate: saveProfile, isPending } = useUpdateProfileMutation();
+
+  const handleSave = () => {
+    saveProfile(
+      { name, phone, ...(photoFile ? { profilePhoto: photoFile } : {}) },
+      { onSuccess: () => setIsEditing(false) }
+    );
+  };
 
   return (
     <>
@@ -204,7 +179,7 @@ export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) 
                 variant='primary'
                 className='flex-1 h-11'
                 disabled={isPending}
-                onClick={() => saveProfile()}
+                onClick={handleSave}
               >
                 {isPending ? 'Saving...' : 'Save Changes'}
               </Button>

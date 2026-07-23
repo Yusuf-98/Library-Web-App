@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import GiveReviewModal from '@/components/user/GiveReviewModal';
 import { getMyLoans, type LoansParams } from '@/lib/api/loans';
+import { queryKeys } from '@/lib/queryKeys';
 import LoansFilterBar from '@/components/sections/my-loans/LoansFilterBar';
 import LoansListSection from '@/components/sections/my-loans/LoansListSection';
 import { FadeInUp } from '@/components/common/StaggeredItems';
@@ -20,7 +21,7 @@ export default function MyLoansPage() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['loans', 'my', status, query],
+    queryKey: queryKeys.loans.my(status, query),
     queryFn: ({ pageParam }) =>
       getMyLoans({ status, q: query || undefined, page: pageParam, limit: 10 }),
     initialPageParam: 1,

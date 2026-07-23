@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getBooksByCategory } from '@/lib/api/books';
+import { queryKeys } from '@/lib/queryKeys';
 import CardBook from '@/components/common/CardBook';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 
@@ -16,7 +17,7 @@ export default function RelatedBooksSection({
   const navigate = useNavigate();
 
   const { data: relatedData } = useQuery({
-    queryKey: ['books', 'related', categoryId],
+    queryKey: queryKeys.books.related(categoryId),
     queryFn: () => getBooksByCategory(categoryId, { limit: 6 }),
   });
   const relatedBooks = (relatedData?.books ?? [])

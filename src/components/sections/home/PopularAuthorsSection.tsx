@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import CardAuthor from '@/components/common/CardAuthor';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { getPopularAuthors } from '@/lib/api/authors';
+import { queryKeys } from '@/lib/queryKeys';
 import { SectionLoading, SectionError } from './SectionState';
 
 export default function PopularAuthorsSection() {
@@ -13,7 +14,7 @@ export default function PopularAuthorsSection() {
     isLoading: authorsLoading,
     isError: authorsError,
   } = useQuery({
-    queryKey: ['authors', 'popular'],
+    queryKey: queryKeys.authors.popular,
     queryFn: getPopularAuthors,
   });
 

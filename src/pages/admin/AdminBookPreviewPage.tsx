@@ -5,6 +5,8 @@ import { getCart, addCartItem } from '@/lib/api/cart';
 import { getBookById } from '@/lib/api/books';
 import type { Book } from '@/types';
 import { borrowBook } from '@/lib/api/loans';
+import { queryKeys } from '@/lib/queryKeys';
+import { getErrorMessage } from '@/lib/utils';
 import DetailBook from '@/components/common/DetailBook';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import arrowBackIcon from '@/assets/icons/arrow-back.svg';
@@ -16,7 +18,7 @@ export default function AdminBookPreviewPage() {
   const queryClient = useQueryClient();
 
   const { data: cart } = useQuery({
-    queryKey: ['cart'],
+    queryKey: queryKeys.cart.all,
     queryFn: getCart,
   });
   const isInCart = (cart?.items ?? []).some((i) => i.bookId === bookId);
@@ -26,7 +28,7 @@ export default function AdminBookPreviewPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['books', 'detail', bookId],
+    queryKey: queryKeys.books.detail(bookId),
     queryFn: () => getBookById(bookId),
     enabled: !!bookId,
   });
@@ -34,12 +36,10 @@ export default function AdminBookPreviewPage() {
   const { mutate: borrowNow, isPending: isBorrowing } = useMutation({
     mutationFn: () => borrowBook(bookId, 7),
     onMutate: async () => {
-      const previous = queryClient.getQueryData<Book>([
-        'books',
-        'detail',
-        bookId,
-      ]);
-      queryClient.setQueryData<Book>(['books', 'detail', bookId], (old) =>
+      const previous = queryClient.getQueryData<Book>(
+        queryKeys.books.detail(bookId)
+      );
+      queryClient.setQueryData<Book>(queryKeys.books.detail(bookId), (old) =>
         old
           ? { ...old, availableCopies: Math.max(0, old.availableCopies - 1) }
           : old
@@ -49,23 +49,23 @@ export default function AdminBookPreviewPage() {
     onSuccess: () => {
       toast.success('Book borrowed successfully!');
     },
-    onError: (_err, _vars, context) => {
+    onError: (error, _vars, context) => {
       if (context?.previous)
-        queryClient.setQueryData(['books', 'detail', bookId], context.previous);
-      toast.error('Failed to borrow. Please try again.');
+        queryClient.setQueryData(queryKeys.books.detail(bookId), context.previous);
+      toast.error(getErrorMessage(error, 'Failed to borrow. Please try again.'));
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ['books', 'detail', bookId] }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.books.detail(bookId) }),
   });
 
   const { mutate: addToCart, isPending: isAddingToCart } = useMutation({
     mutationFn: () => addCartItem(bookId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart.all });
       toast.success('Added to cart.');
     },
-    onError: () => {
-      toast.error('Failed to add to cart. Please try again.');
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Failed to add to cart. Please try again.'));
     },
   });
 

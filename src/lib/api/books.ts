@@ -56,9 +56,17 @@ export const createBook = (payload: BookPayload) =>
     .post<Book>('/books', toBookFormData(payload), { headers: { 'Content-Type': 'multipart/form-data' } })
     .then((r) => r.data);
 
-export const updateBook = (id: number, payload: Partial<BookPayload>) =>
-  api
-    .put<Book>(`/books/${id}`, toBookFormData(payload), { headers: { 'Content-Type': 'multipart/form-data' } })
-    .then((r) => r.data);
+export const updateBook = (id: number, payload: Partial<BookPayload>) => {
+  // Multipart form fields arrive at the backend as strings, and the update
+  // endpoint doesn't coerce numeric fields (e.g. publishedYear), causing a
+  // 500. Only use multipart when actually uploading a new cover file; send
+  // plain JSON (real number types preserved) otherwise.
+  if (payload.coverImage instanceof File) {
+    return api
+      .put<Book>(`/books/${id}`, toBookFormData(payload), { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then((r) => r.data);
+  }
+  return api.put<Book>(`/books/${id}`, payload).then((r) => r.data);
+};
 
 export const deleteBook = (id: number) => api.delete(`/books/${id}`);

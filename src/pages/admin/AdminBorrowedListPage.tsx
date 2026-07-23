@@ -7,6 +7,8 @@ import AdminStatusFilters from '@/components/admin/AdminStatusFilters';
 import AdminPaginationFooter from '@/components/admin/AdminPaginationFooter';
 import { FadeInUp, FadeIn } from '@/components/common/StaggeredItems';
 import { getAdminLoans, updateAdminLoan, type AdminLoansParams } from '@/lib/api/loans';
+import { queryKeys } from '@/lib/queryKeys';
+import { getErrorMessage } from '@/lib/utils';
 
 const STATUS_FILTERS: { label: string; value: NonNullable<AdminLoansParams['status']> }[] = [
   { label: 'All', value: 'all' },
@@ -31,18 +33,18 @@ export default function AdminBorrowedListPage() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'loans', status, query, page],
+    queryKey: queryKeys.admin.loans.list(status, query, page),
     queryFn: () => getAdminLoans({ status, q: query || undefined, page, limit: 10 }),
   });
 
   const { mutate: markReturned } = useMutation({
     mutationFn: (id: number) => updateAdminLoan(id, { status: 'RETURNED' }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'loans'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.loans.all });
       toast.success('Loan marked as returned.');
     },
-    onError: () => {
-      toast.error('Failed to update loan. Please try again.');
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Failed to update loan. Please try again.'));
     },
   });
 

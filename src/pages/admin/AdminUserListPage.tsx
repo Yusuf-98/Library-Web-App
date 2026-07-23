@@ -5,6 +5,7 @@ import AdminSearchInput from '@/components/admin/AdminSearchInput';
 import { FadeInUp, FadeIn } from '@/components/common/StaggeredItems';
 import { formatShortDateTime } from '@/lib/utils';
 import { getAdminUsers } from '@/lib/api/users';
+import { queryKeys } from '@/lib/queryKeys';
 
 const COLUMNS = ['No', 'Name', 'Nomor Handphone', 'Email', 'Created at'];
 
@@ -14,7 +15,7 @@ export default function AdminUserListPage() {
   const limit = 10;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'users', query, page],
+    queryKey: queryKeys.admin.users(query, page),
     queryFn: () => getAdminUsers({ q: query || undefined, page, limit }),
   });
 

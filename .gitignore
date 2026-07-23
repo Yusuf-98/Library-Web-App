@@ -1,6 +1,8 @@
 # Logs
 logs
 *.log
+*.pem
+*.cjs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -25,10 +27,6 @@ dist-ssr
 
 # env files (can opt-in for committing if needed)
 .env*
-
-# misc
-*.pem
-*.cjs
 
 # vercel
 .vercel

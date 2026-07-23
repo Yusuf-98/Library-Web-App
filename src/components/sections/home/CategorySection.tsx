@@ -5,6 +5,7 @@ import CardCategory from '@/components/common/CardCategory';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { getCategories } from '@/lib/api/categories';
 import { getCategoryIcon, HOME_CATEGORY_ORDER } from '@/lib/categoryIcons';
+import { queryKeys } from '@/lib/queryKeys';
 import { cn } from '@/lib/utils';
 import { SectionLoading, SectionError } from './SectionState';
 
@@ -20,7 +21,7 @@ export default function CategorySection() {
     isLoading: categoriesLoading,
     isError: categoriesError,
   } = useQuery({
-    queryKey: ['categories'],
+    queryKey: queryKeys.categories.all,
     queryFn: getCategories,
   });
 

@@ -3,6 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { Book, User } from '@/types';
 import { getCart, addCartItem } from '@/lib/api/cart';
+import { queryKeys } from '@/lib/queryKeys';
+import { getErrorMessage } from '@/lib/utils';
 import DetailBook from '@/components/common/DetailBook';
 
 interface CoverInfoSectionProps {
@@ -24,10 +26,10 @@ export default function CoverInfoSection({
   const { mutate: borrowNow, isPending: isBorrowing } = useMutation({
     mutationFn: () => addCartItem(bookId),
     onSuccess: (cartItem) => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart.all });
       navigate('/checkout', { state: { itemIds: [cartItem.id] } });
     },
-    onError: async () => {
+    onError: async (error) => {
       try {
         const cart = await getCart();
         const existing = cart.items.find((i) => i.bookId === bookId);
@@ -38,18 +40,18 @@ export default function CoverInfoSection({
       } catch {
         // ignore, fall through to error toast
       }
-      toast.error('Failed to start borrow request. Please try again.');
+      toast.error(getErrorMessage(error, 'Failed to start borrow request. Please try again.'));
     },
   });
 
   const { mutate: addToCart, isPending: isAddingToCart } = useMutation({
     mutationFn: () => addCartItem(bookId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart.all });
       toast.success('Added to cart.');
     },
-    onError: () => {
-      toast.error('Failed to add to cart. Please try again.');
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Failed to add to cart. Please try again.'));
     },
   });
 

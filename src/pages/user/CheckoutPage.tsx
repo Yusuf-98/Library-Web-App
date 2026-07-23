@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Footer from '@/components/shared/Footer';
 import { getCheckout } from '@/lib/api/cart';
+import { queryKeys } from '@/lib/queryKeys';
 import CheckoutSummarySection from '@/components/sections/checkout/CheckoutSummarySection';
 import BorrowFormSection from '@/components/sections/checkout/BorrowFormSection';
 import { FadeInUp } from '@/components/common/StaggeredItems';
@@ -16,7 +17,7 @@ export default function CheckoutPage() {
     ?.itemIds;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['cart', 'checkout'],
+    queryKey: queryKeys.cart.checkout,
     queryFn: getCheckout,
   });
 
