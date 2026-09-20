@@ -6,6 +6,11 @@ import logoBooky from '@/assets/images/logo-booky.png';
 import { registerApi, loginApi } from '@/features/auth/api';
 import { setCredentials } from '@/features/auth/authSlice';
 import { getErrorMessage } from '@/lib/utils';
+import {
+  validateRegistration,
+  type RegisterErrors,
+  type RegisterValues,
+} from '@/lib/validation';
 import InputField from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { FadeInUp } from '@/components/common/StaggeredItems';
@@ -22,13 +27,21 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<RegisterErrors>({});
 
   const { mutate: register, isPending } = useMutation({
     mutationFn: async () => {
-      await registerApi({ name, email, phone, password, confirmPassword });
+      const cleanEmail = email.trim();
+      await registerApi({
+        name: name.trim(),
+        email: cleanEmail,
+        phone: phone.trim(),
+        password,
+        confirmPassword,
+      });
       // Register doesn't return a session token, so log in right after
       // with the same credentials to get one.
-      return loginApi(email, password);
+      return loginApi(cleanEmail, password);
     },
     onSuccess: (data) => {
       dispatch(setCredentials({ user: data.user, token: data.token }));
@@ -41,15 +54,25 @@ export default function RegisterPage() {
     },
   });
 
+  // Editing a field clears its own error.
+  const field =
+    (key: keyof RegisterValues, setter: (value: string) => void) =>
+    (value: string) => {
+      setter(value);
+      setFieldErrors((prev) => ({ ...prev, [key]: undefined }));
+    };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    if (!name || !email || !phone || !password || !confirmPassword) {
-      setErrorMsg('All fields are required.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setErrorMsg('Passwords do not match.');
+
+    const errors = validateRegistration({ name, email, phone, password, confirmPassword });
+    setFieldErrors(errors);
+    const firstInvalid = (
+      ['name', 'email', 'phone', 'password', 'confirmPassword'] as const
+    ).find((key) => errors[key]);
+    if (firstInvalid) {
+      document.getElementById(firstInvalid)?.focus();
       return;
     }
     register();
@@ -93,7 +116,9 @@ export default function RegisterPage() {
               type='text'
               autoComplete='name'
               value={name}
-              onChange={setName}
+              onChange={field('name', setName)}
+              state={fieldErrors.name ? 'error' : 'default'}
+              helperText={fieldErrors.name}
             />
             <InputField
               id='email'
@@ -101,7 +126,9 @@ export default function RegisterPage() {
               type='email'
               autoComplete='email'
               value={email}
-              onChange={setEmail}
+              onChange={field('email', setEmail)}
+              state={fieldErrors.email ? 'error' : 'default'}
+              helperText={fieldErrors.email}
             />
             <InputField
               id='phone'
@@ -109,14 +136,18 @@ export default function RegisterPage() {
               type='tel'
               autoComplete='tel'
               value={phone}
-              onChange={setPhone}
+              onChange={field('phone', setPhone)}
+              state={fieldErrors.phone ? 'error' : 'default'}
+              helperText={fieldErrors.phone}
             />
             <InputField
               id='password'
               label='Password'
               autoComplete='new-password'
               value={password}
-              onChange={setPassword}
+              onChange={field('password', setPassword)}
+              state={fieldErrors.password ? 'error' : 'default'}
+              helperText={fieldErrors.password}
               showPasswordToggle
               showPassword={showPassword}
               onTogglePassword={() => setShowPassword((v) => !v)}
@@ -126,7 +157,9 @@ export default function RegisterPage() {
               label='Confirm Password'
               autoComplete='new-password'
               value={confirmPassword}
-              onChange={setConfirmPassword}
+              onChange={field('confirmPassword', setConfirmPassword)}
+              state={fieldErrors.confirmPassword ? 'error' : 'default'}
+              helperText={fieldErrors.confirmPassword}
               showPasswordToggle
               showPassword={showConfirmPassword}
               onTogglePassword={() => setShowConfirmPassword((v) => !v)}

@@ -62,6 +62,8 @@ export default function InputField({
           type={inputType}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          aria-invalid={isError || undefined}
+          aria-describedby={isError && helperText ? `${id}-error` : undefined}
           autoComplete={autoComplete}
           placeholder={placeholder}
           disabled={isDisabled}
@@ -86,7 +88,7 @@ export default function InputField({
       </div>
 
       {isError && helperText && (
-        <p className="text-sm font-medium text-danger tracking-t-3 w-full">
+        <p id={`${id}-error`} className="text-sm font-medium text-danger tracking-t-3 w-full">
           {helperText}
         </p>
       )}

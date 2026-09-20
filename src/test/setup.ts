@@ -5,6 +5,7 @@ import { afterEach } from 'vitest';
 afterEach(() => {
   cleanup();
   document.body.style.overflow = '';
+  localStorage.clear();
 });
 
 // jsdom has neither of these. Reduced motion makes the fade-in wrappers render
