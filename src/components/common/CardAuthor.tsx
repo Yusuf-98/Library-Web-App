@@ -32,6 +32,7 @@ export default function CardAuthor({
       <img
         src={avatar || authorImage}
         alt={name}
+        loading='lazy'
         className='rounded-full object-cover shrink-0 size-15 md:size-[clamp(60px,calc(36px+3.125vw),81px)]'
       />
 

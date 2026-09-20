@@ -28,7 +28,7 @@ export default function CardBook({
       )}
     >
       {/* Cover */}
-      <img src={cover} alt={title} className='w-full aspect-2/3 object-cover' />
+      <img src={cover} alt={title} loading='lazy' className='w-full aspect-2/3 object-cover' />
 
       {/* Info */}
       <div className='flex flex-col w-full p-xl gap-1'>

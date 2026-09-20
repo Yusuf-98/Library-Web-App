@@ -32,6 +32,7 @@ export default function CardReview({
           <img
             src={avatar}
             alt={name}
+            loading="lazy"
             className="rounded-full object-cover shrink-0 size-[clamp(58px,calc(51.14px+0.893vw),64px)]"
           />
         ) : (

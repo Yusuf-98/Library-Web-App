@@ -147,6 +147,7 @@ export default function AdminBookListPage() {
                 <img
                   src={book.coverImage}
                   alt={book.title}
+                  loading='lazy'
                   className='w-23 h-34.5 object-cover shrink-0'
                 />
                 <div className='flex-1 min-w-0 flex flex-col gap-0.5 md:gap-xs'>

@@ -29,7 +29,7 @@ export default function BookInfo({
 }: BookInfoProps) {
   return (
     <div className={cn('flex items-center gap-lg md:gap-xl', className)}>
-      <img src={cover} alt={title} className={cn(DEFAULT_COVER, coverClassName)} />
+      <img src={cover} alt={title} loading="lazy" className={cn(DEFAULT_COVER, coverClassName)} />
       <div className="flex flex-col gap-xs w-49">
         <span className="inline-flex self-start border border-neutral-300 rounded-sm px-md text-sm font-bold text-neutral-950 tracking-t-2">
           {category}

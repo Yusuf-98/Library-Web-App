@@ -88,7 +88,7 @@ export default function CardAdminBorrowedList({
 
       {/* Mobile: stacked */}
       <div className="flex flex-col gap-lg w-full md:hidden">
-        <img src={cover} alt={title} className="w-23 h-34.5 object-cover shrink-0" />
+        <img src={cover} alt={title} loading="lazy" className="w-23 h-34.5 object-cover shrink-0" />
         {bookInfo}
         <div className="h-px w-full bg-neutral-300" />
         <div className="flex flex-col gap-md">{borrowerInfo}</div>
@@ -97,7 +97,7 @@ export default function CardAdminBorrowedList({
       {/* Desktop: side by side */}
       <div className="hidden md:flex items-center justify-center w-full">
         <div className="flex flex-1 gap-xl items-center min-w-0">
-          <img src={cover} alt={title} className="w-23 h-34.5 object-cover shrink-0" />
+          <img src={cover} alt={title} loading="lazy" className="w-23 h-34.5 object-cover shrink-0" />
           {bookInfo}
         </div>
         <div className="flex flex-col items-end gap-md">{borrowerInfo}</div>
