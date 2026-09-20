@@ -44,6 +44,8 @@ export default function FilterSidebar({
             <button
               key={category.id}
               type="button"
+              role="checkbox"
+              aria-checked={checked}
               onClick={() => onCategoryChange(checked ? undefined : category.id)}
               className="cursor-pointer flex items-center gap-md w-full text-left"
             >
@@ -66,6 +68,8 @@ export default function FilterSidebar({
               <button
                 key={star}
                 type="button"
+                role="checkbox"
+                aria-checked={checked}
                 onClick={() => onRatingChange(checked ? undefined : star)}
                 className="cursor-pointer flex items-center gap-md w-full p-md"
               >
