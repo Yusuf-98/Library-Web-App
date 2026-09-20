@@ -1,5 +1,7 @@
 # Booky — Library Web App
 
+[![CI](https://github.com/Yusuf-98/Library-Web-App/actions/workflows/ci.yml/badge.svg)](https://github.com/Yusuf-98/Library-Web-App/actions/workflows/ci.yml)
+
 A web app for borrowing books online: browse the catalogue, add books to a cart, check out with a borrow date and duration, and track loans and reviews. Admins manage books, users and loan returns from a separate dashboard.
 
 Built with React, TypeScript and Vite against a separate REST API. The interface is aimed at an Indonesian audience, so a few labels (for example the phone number field) are in Indonesian.
@@ -61,10 +63,11 @@ Access is split into three levels in [src/App.tsx](src/App.tsx): public pages, p
 - **React Router** for routing, with route-level code splitting
 - **Tailwind CSS v4** + **Radix UI** (shadcn/ui) for styling and accessible primitives
 - **Axios** for the API client
+- **Vitest** + **React Testing Library** for tests, **GitHub Actions** for CI
 
 ## Getting started
 
-Requires Node.js 20.19+ or 22.12+ (Vite 8).
+Requires Node.js 22.12 or newer.
 
 ```bash
 npm install
@@ -84,7 +87,22 @@ The dev server runs on port 5173 and fails fast if that port is taken. Set the `
 | `npm run dev` | Start the Vite dev server |
 | `npm run build` | Type-check (`tsc -b`) and build for production |
 | `npm run lint` | Run ESLint |
+| `npm run typecheck` | Type-check only |
+| `npm test` | Run the test suite once |
+| `npm run test:watch` | Run tests in watch mode |
 | `npm run preview` | Preview the production build |
+
+## Testing
+
+Tests live next to the code they cover (`*.test.ts` / `*.test.tsx`) and run with Vitest and React Testing Library in jsdom. They target interactive logic rather than static markup:
+
+- **Dates and timezones**: the default borrow date and the return date are checked in Toronto, Los Angeles, Jakarta and UTC, including US daylight-saving changes and leap years.
+- **Borrow form**: default and minimum date, return-date recalculation, agreement gating and the payload sent on submit.
+- **Search overlay**: results, empty and error states, Escape to close, scroll lock, and closing when a result is opened.
+- **Accessibility**: the tabs (roving tabindex, arrow/Home/End keys, tabpanel wiring), the overlay hook (focus return) and the filter checkboxes.
+- **Resilience and forms**: the error boundary fallback and the cover-image controls in the admin book form.
+
+GitHub Actions runs lint, type-check, tests and the production build on every push and pull request ([ci.yml](.github/workflows/ci.yml)).
 
 ## Project structure
 
@@ -99,7 +117,7 @@ src/
 │   ├── shared/     # Navbar, footer, route guards, search overlay
 │   └── ui/         # UI primitives (shadcn/ui on Radix)
 ├── features/       # Per-domain state and data hooks: auth, ui, cart, checkout, profile, reviews
-├── hooks/          # Generic hooks (useImageError, useInView)
+├── hooks/          # Generic hooks (useImageError, useInView, useRovingTabs, useOverlayA11y)
 ├── lib/
 │   ├── api/        # REST calls grouped by resource
 │   ├── queryKeys.ts  # Centralised TanStack Query keys
@@ -107,9 +125,14 @@ src/
 ├── pages/
 │   ├── user/       # Reader pages
 │   └── admin/      # Admin pages
+├── test/           # Vitest setup (jsdom stubs)
 └── types/          # Shared types (Book, User, Loan, Review, ...)
 ```
 
 ## Deployment
 
 Deployed on Vercel. [vercel.json](vercel.json) rewrites every path to `index.html` so direct links and page refreshes work with client-side routing. Set `VITE_API_URL` in the Vercel project's environment variables.
+
+## License
+
+Licensed under the [MIT License](LICENSE).
