@@ -1,7 +1,9 @@
+import { useCallback, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { closeSearch, setSearchQuery } from '@/features/ui/uiSlice';
+import { useOverlayA11y } from '@/hooks/useOverlayA11y';
 import { getBooks } from '@/lib/api/books';
 import { queryKeys } from '@/lib/queryKeys';
 import CardBook from '@/components/common/CardBook';
@@ -18,6 +20,10 @@ export default function SearchOverlay() {
 
   const visible = isSearchOpen || searchQuery.trim().length > 0;
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const close = useCallback(() => dispatch(closeSearch()), [dispatch]);
+  useOverlayA11y(visible, close, inputRef);
+
   const { data, isLoading, isError } = useQuery({
     queryKey: queryKeys.books.search(searchQuery),
     queryFn: () => getBooks({ q: searchQuery }),
@@ -29,28 +35,33 @@ export default function SearchOverlay() {
   const books = data?.books ?? [];
 
   return (
-    <div className="fixed inset-0 md:top-[clamp(64px,calc(45.71px+2.381vw),80px)] z-40 bg-white overflow-y-auto">
+    <div
+      role="region"
+      aria-label="Search results"
+      className="fixed inset-0 md:top-[clamp(64px,calc(45.71px+2.381vw),80px)] z-40 bg-white overflow-y-auto"
+    >
       {/* Header */}
       <div className="md:hidden flex items-center gap-4 h-16 px-4 bg-white shadow-card">
         <img src={logoBooky} alt="" className="size-10 object-contain shrink-0" />
         <div className="flex flex-1 items-center gap-1.5 h-10 px-3 py-2 rounded-full border border-neutral-300 bg-white min-w-0">
           <img src={searchIcon} alt="" className="shrink-0 size-5" />
           <input
+            ref={inputRef}
             type="text"
             value={searchQuery}
             onChange={(e) => dispatch(setSearchQuery(e.target.value))}
             placeholder="Search book"
+            aria-label="Search book"
             className="flex-1 min-w-0 text-sm font-medium text-neutral-600 tracking-t-3 outline-none placeholder:text-neutral-600 bg-transparent"
-            autoFocus
           />
         </div>
-        <button type="button" onClick={() => dispatch(closeSearch())} className="cursor-pointer shrink-0 size-6" aria-label="Close search">
+        <button type="button" onClick={close} className="cursor-pointer shrink-0 size-6" aria-label="Close search">
           <img src={xCloseIcon} alt="" className="size-6" />
         </button>
       </div>
 
       {/* Results */}
-      <main className="custom-container py-6 md:py-[clamp(16px,calc(-20.57px+4.762vw),48px)]">
+      <main aria-live="polite" className="custom-container py-6 md:py-[clamp(16px,calc(-20.57px+4.762vw),48px)]">
         {searchQuery.trim().length === 0 && (
           <p className="text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10">
             Type to search for books
@@ -84,7 +95,10 @@ export default function SearchOverlay() {
                   author={book.author.name}
                   cover={book.coverImage}
                   rating={book.rating}
-                  onClick={() => navigate(`/books/${book.id}`)}
+                  onClick={() => {
+                    close();
+                    navigate(`/books/${book.id}`);
+                  }}
                   className="w-full"
                 />
               </FadeInUp>

@@ -112,6 +112,7 @@ export default function Navbar({
                 value={searchQuery}
                 onChange={(e) => dispatch(setSearchQuery(e.target.value))}
                 placeholder='Search book'
+                aria-label='Search book'
                 className='flex-1 min-w-0 text-sm font-medium text-neutral-600 tracking-t-3 outline-none placeholder:text-neutral-600 bg-transparent'
               />
             </div>
