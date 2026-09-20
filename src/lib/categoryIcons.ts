@@ -17,7 +17,7 @@ const CATEGORY_ICON_MAP: Record<string, string> = {
   religious: education,
 };
 
-/** Daftar kategori */
+/** Categories shown on the home page and in filters, in display order */
 export const HOME_CATEGORY_ORDER = [
   'Fiction',
   'Non-Fiction',
