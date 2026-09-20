@@ -79,7 +79,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className='min-h-screen bg-white'>
+    <main className='min-h-screen bg-white'>
       <div className='mx-auto w-full max-w-98.25 md:max-w-100 px-6 md:px-0 pt-[clamp(40px,8.8svh,75px)] pb-10'>
         <FadeInUp className='flex flex-col gap-5'>
           {/* Logo */}
@@ -198,6 +198,6 @@ export default function RegisterPage() {
           </form>
         </FadeInUp>
       </div>
-    </div>
+    </main>
   );
 }

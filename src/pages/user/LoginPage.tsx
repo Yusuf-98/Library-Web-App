@@ -41,7 +41,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='min-h-screen bg-white'>
+    <main className='min-h-screen bg-white'>
       <div className='mx-auto w-full max-w-98.25 md:max-w-100 px-8.5 md:px-0 pt-[clamp(60px,25.5svh,217px)] pb-10'>
         <FadeInUp className='flex flex-col gap-5'>
           {/* Logo */}
@@ -126,6 +126,6 @@ export default function LoginPage() {
           </form>
         </FadeInUp>
       </div>
-    </div>
+    </main>
   );
 }
