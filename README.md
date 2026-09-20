@@ -114,11 +114,22 @@ Tests live next to the code they cover (`*.test.ts` / `*.test.tsx`) and run with
 - **Borrow form**: default and minimum date, return-date recalculation, agreement gating and the payload sent on submit.
 - **Search overlay**: results, empty and error states, Escape to close, scroll lock, and closing when a result is opened.
 - **Accessibility**: the tabs (roving tabindex, arrow/Home/End keys, tabpanel wiring), the overlay hook (focus return) and the filter checkboxes.
-- **Forms and search**: the registration rules and the full Register flow (field errors, focus, trimmed values, server errors), and the debounced search hooks (one request once typing pauses; a new search restarts at page 1).
+- **Forms and search**: the registration rules and the full Register flow (field errors, focus, trimmed values, server errors), the Login flow (admin redirect, refused credentials), and the debounced search hooks (one request once typing pauses; a new search restarts at page 1).
+- **Checkout logic**: `useBorrowMutation` (optimistic cart and stock update, rollback on failure, partial failures, success redirect) and the Cart page (selection, Select All, removal by cart item id).
+- **Access control**: `ProtectedRoute` and `AdminRoute`, including an exact-match check on the `ADMIN` role.
+- **Home page**: loading skeletons, paging through categories, "Load More", error and empty states.
+- **API contract**: every function in `src/lib/api` is checked for the path, method, query string, body and envelope part it sends and returns.
 - **Resilience**: the error boundary fallback, "not found" versus generic error states on the book and author pages, the API client (status-preserving errors, Bearer token, 401 logout) and the retry policy (4xx answers are not retried).
 - **Admin forms**: the cover-image controls in the book form.
 
 GitHub Actions runs lint, type-check, tests and the production build on every push and pull request ([ci.yml](.github/workflows/ci.yml)).
+
+## Performance
+
+- **Cover images** are requested from Cloudinary at about twice their displayed size in a modern format (`f_auto,q_auto,c_limit`), and lazy-loaded below the fold. A 2.2 MB cover becomes about 35 KB.
+- **Hero banner** is a responsive WebP (`srcset` for narrow and wide screens) with `fetchpriority="high"` and declared dimensions.
+- **Loading skeletons** have exactly the same box model as the cards they stand in for, so nothing shifts when data arrives (Cumulative Layout Shift of 0 on the home page).
+- **Requests** are kept lean: search is debounced, 4xx answers are not retried, and routes are code-split.
 
 ## API
 
