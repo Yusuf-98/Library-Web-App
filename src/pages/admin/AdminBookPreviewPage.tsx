@@ -17,6 +17,7 @@ export default function AdminBookPreviewPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // --- Queries ---
   const { data: cart } = useQuery({
     queryKey: queryKeys.cart.all,
     queryFn: getCart,
@@ -33,6 +34,7 @@ export default function AdminBookPreviewPage() {
     enabled: !!bookId,
   });
 
+  // --- Mutations ---
   const { mutate: borrowNow, isPending: isBorrowing } = useMutation({
     mutationFn: () => borrowBook(bookId, 7),
     onMutate: async () => {
@@ -69,6 +71,7 @@ export default function AdminBookPreviewPage() {
     },
   });
 
+  // --- Derived ---
   const outOfStock = (book?.availableCopies ?? 0) <= 0;
 
   return (

@@ -18,7 +18,7 @@ const AXIS: Record<Direction, { x: number; y: number }> = {
   none: { x: 0, y: 0 },
 };
 
-// Animation duration and travel distance per direction
+// --- Config ---
 const CONFIG: Record<Direction, { duration: number; distance: number }> = {
   up: { duration: 1400, distance: 30 },
   down: { duration: 1400, distance: 30 },
@@ -38,7 +38,6 @@ interface StaggerItemProps {
 function StaggerItem({
   direction,
   children,
-  // Delay before the animation starts (ms)
   delay = 0,
   duration = CONFIG[direction].duration,
   distance = CONFIG[direction].distance,

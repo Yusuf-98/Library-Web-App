@@ -9,6 +9,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // --- Handlers ---
   const handleLogoClick = () => {
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });

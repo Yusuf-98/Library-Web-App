@@ -16,6 +16,7 @@ import xCloseIcon from '@/assets/icons/x-close.svg';
 export default function SearchOverlay() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  // --- State ---
   const isSearchOpen = useAppSelector((s) => s.ui.isSearchOpen);
   const searchQuery = useAppSelector((s) => s.ui.searchQuery);
 
@@ -25,7 +26,7 @@ export default function SearchOverlay() {
   const close = useCallback(() => dispatch(closeSearch()), [dispatch]);
   useOverlayA11y(visible, close, inputRef);
 
-  // Search only once typing pauses, instead of on every keystroke.
+  // --- Search ---
   const debouncedQuery = useDebouncedValue(searchQuery);
   const { data, isLoading, isError } = useQuery({
     queryKey: queryKeys.books.search(debouncedQuery),
@@ -35,6 +36,7 @@ export default function SearchOverlay() {
 
   if (!visible) return null;
 
+  // --- Derived ---
   const hasQuery = searchQuery.trim().length > 0;
   const isSettled = searchQuery === debouncedQuery;
   const books = hasQuery ? (data?.books ?? []) : [];
@@ -68,30 +70,35 @@ export default function SearchOverlay() {
 
       {/* Results */}
       <main aria-live="polite" className="custom-container py-6 md:py-[clamp(16px,calc(-20.57px+4.762vw),48px)]">
+        {/* Prompt */}
         {!hasQuery && (
           <p className="text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10">
             Type to search for books
           </p>
         )}
 
+        {/* Loading state */}
         {isSearching && books.length === 0 && (
           <div className="flex justify-center mt-10">
             <span className="size-8 border-2 border-primary-300/30 border-t-primary-300 rounded-full animate-spin" />
           </div>
         )}
 
+        {/* Error state */}
         {isError && (
           <p className="text-sm font-medium text-accent-red tracking-t-2 text-center mt-10">
             Failed to search books. Please try again.
           </p>
         )}
 
+        {/* Empty state */}
         {hasQuery && !isSearching && !isError && books.length === 0 && (
           <p className="text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10">
             No books found for "{searchQuery}"
           </p>
         )}
 
+        {/* Results */}
         {!isError && books.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2xl">
             {books.map((book, index) => (

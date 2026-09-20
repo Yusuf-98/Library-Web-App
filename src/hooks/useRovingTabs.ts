@@ -1,7 +1,5 @@
 import { useRef, type KeyboardEvent } from 'react';
 
-// Arrow/Home/End focus movement for a tablist. Activation stays manual
-// (Enter/Space clicks the focused tab) because each tab is a route change.
 export function useRovingTabs(count: number) {
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 

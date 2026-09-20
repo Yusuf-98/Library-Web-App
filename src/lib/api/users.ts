@@ -1,6 +1,7 @@
 import api from '@/lib/axios';
 import type { MyProfileResponse, UserProfile } from '@/types';
 
+// --- Profile ---
 export interface UpdateProfilePayload {
   name?: string;
   phone?: string;
@@ -9,6 +10,7 @@ export interface UpdateProfilePayload {
 
 export const getMyProfile = () => api.get<MyProfileResponse>('/me').then((r) => r.data);
 
+// --- Admin ---
 export interface AdminUsersParams {
   q?: string;
   page?: number;
@@ -23,6 +25,7 @@ export const getAdminUsers = (params?: AdminUsersParams) =>
     )
     .then((r) => r.data);
 
+// --- Profile update ---
 export const updateMyProfile = (payload: UpdateProfilePayload) => {
   if (payload.profilePhoto instanceof File) {
     const form = new FormData();

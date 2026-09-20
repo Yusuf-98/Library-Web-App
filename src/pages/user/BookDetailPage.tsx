@@ -18,9 +18,11 @@ export default function BookDetailPage() {
   const bookId = Number(id);
   const navigate = useNavigate();
 
+  // --- Auth ---
   const user = useAppSelector((s) => s.auth.user);
   const isLoggedIn = !!user;
 
+  // --- Queries ---
   const { data: cart } = useQuery({
     queryKey: queryKeys.cart.all,
     queryFn: getCart,
@@ -38,7 +40,6 @@ export default function BookDetailPage() {
     queryFn: () => getBookById(bookId),
     enabled: !!bookId,
   });
-  // A non-numeric id (/books/abc) is never fetched, so it is also "not found".
   const notFound = !bookId || isNotFoundError(error);
 
   return (
@@ -64,7 +65,7 @@ export default function BookDetailPage() {
       {!isLoading && book && (
         <>
           <main className='custom-container flex-1 py-6 md:py-8 flex flex-col gap-[clamp(24px,calc(-21.71px+5.952vw),64px)]'>
-            {/* Content: Breadcrumb + Cover/Info */}
+            {/* Content */}
             <div className='flex flex-col gap-xl md:gap-[clamp(16px,calc(6.86px+1.19vw),24px)]'>
               {/* Breadcrumb */}
               <div className='flex items-center gap-1 text-sm font-semibold tracking-t-2 flex-wrap'>
@@ -87,7 +88,7 @@ export default function BookDetailPage() {
                 <span className='text-neutral-950 truncate'>{book.title}</span>
               </div>
 
-              {/* Cover + Info */}
+              {/* Details */}
               <FadeInUp>
                 <CoverInfoSection
                   book={book}

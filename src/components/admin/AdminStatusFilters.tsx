@@ -17,6 +17,7 @@ export default function AdminStatusFilters<T extends string>({
 }: AdminStatusFiltersProps<T>) {
   return (
     <div className={cn('flex items-center gap-md md:gap-lg flex-wrap', className)}>
+      {/* Filter chips */}
       {filters.map((f) => (
         <button
           key={f.value}

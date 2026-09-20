@@ -19,6 +19,7 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // --- Form state ---
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -29,6 +30,7 @@ export default function RegisterPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [fieldErrors, setFieldErrors] = useState<RegisterErrors>({});
 
+  // --- Mutation ---
   const { mutate: register, isPending } = useMutation({
     mutationFn: async () => {
       const cleanEmail = email.trim();
@@ -39,8 +41,6 @@ export default function RegisterPage() {
         password,
         confirmPassword,
       });
-      // Register doesn't return a session token, so log in right after
-      // with the same credentials to get one.
       return loginApi(cleanEmail, password);
     },
     onSuccess: (data) => {
@@ -54,7 +54,7 @@ export default function RegisterPage() {
     },
   });
 
-  // Editing a field clears its own error.
+  // --- Handlers ---
   const field =
     (key: keyof RegisterValues, setter: (value: string) => void) =>
     (value: string) => {

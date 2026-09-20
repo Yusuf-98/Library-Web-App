@@ -19,7 +19,6 @@ export default function BookByAuthorPage() {
     queryFn: () => getBooksByAuthor(authorId),
     enabled: !!authorId,
   });
-  // A non-numeric id (/author/abc) is never fetched, so it is also "not found".
   const notFound = !authorId || isNotFoundError(error);
 
   const books = data?.books ?? [];

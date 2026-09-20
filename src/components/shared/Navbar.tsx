@@ -71,6 +71,7 @@ export default function Navbar({
   const searchQuery = useAppSelector((s) => s.ui.searchQuery);
   const hasShadow = variant !== 'no-background';
 
+  // --- Handlers ---
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
@@ -121,7 +122,7 @@ export default function Navbar({
           {/* Right icons */}
           {variant !== 'before-login' && (
             <div className='flex items-center gap-4 md:gap-[clamp(16px,calc(6.86px+1.19vw),24px)]'>
-              {/* Search - mobile */}
+              {/* Search button */}
               {variant === 'default' && (
                 <button
                   type='button'
@@ -210,7 +211,7 @@ export default function Navbar({
             </div>
           )}
 
-          {/* Guest icons (mobile) */}
+          {/* Guest icons */}
           {variant === 'before-login' && (
             <div className='flex md:hidden items-center gap-4'>
               <button
@@ -271,7 +272,7 @@ export default function Navbar({
             </div>
           )}
 
-          {/* Login / Register (desktop) */}
+          {/* Guest buttons */}
           {variant === 'before-login' && (
             <div className='hidden md:flex items-center gap-4'>
               <Button

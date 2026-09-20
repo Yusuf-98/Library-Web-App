@@ -40,17 +40,20 @@ export default function AdminBookListPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // --- State ---
   const [status, setStatus] =
     useState<NonNullable<AdminBooksParams['status']>>('all');
   const { query, setQuery, debouncedQuery, page, setPage } = usePagedSearch();
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
+  // --- Queries ---
   const { data, isLoading, isError } = useQuery({
     queryKey: queryKeys.admin.books.list(status, debouncedQuery, page),
     queryFn: () =>
       getAdminBooks({ status, q: debouncedQuery || undefined, page, limit: 10 }),
   });
 
+  // --- Mutations ---
   const { mutate: confirmDelete, isPending: isDeleting } = useMutation({
     mutationFn: (id: number) => deleteBook(id),
     onSuccess: () => {
@@ -63,6 +66,7 @@ export default function AdminBookListPage() {
     },
   });
 
+  // --- Derived ---
   const books = data?.books ?? [];
 
   return (
@@ -167,7 +171,7 @@ export default function AdminBookListPage() {
                 </div>
               </div>
 
-              {/* Mobile - menu */}
+              {/* Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -203,7 +207,7 @@ export default function AdminBookListPage() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Desktop: inline buttons */}
+              {/* Buttons */}
               <div className='hidden md:flex gap-3.25 items-center shrink-0'>
                 <Button
                   type='button'

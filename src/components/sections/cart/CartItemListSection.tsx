@@ -22,6 +22,7 @@ export default function CartItemListSection({
 }: CartItemListSectionProps) {
   return (
     <div className='flex-1 min-w-0 flex flex-col gap-xl md:gap-3xl items-start'>
+      {/* Select all */}
       <div className='flex items-center gap-xl'>
         <button
           type='button'
@@ -37,6 +38,7 @@ export default function CartItemListSection({
         </span>
       </div>
 
+      {/* Items */}
       {items.map((item, index) => (
         <FadeInUp
           key={item.id}

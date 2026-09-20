@@ -21,8 +21,10 @@ export default function CategoryPage() {
   const { id } = useParams<{ id: string }>();
   const categoryId = Number(id);
   const navigate = useNavigate();
+  // --- State ---
   const [minRating, setMinRating] = useState<number | undefined>(undefined);
 
+  // --- Queries ---
   const { data: categories } = useQuery({
     queryKey: queryKeys.categories.all,
     queryFn: getCategories,
@@ -34,6 +36,7 @@ export default function CategoryPage() {
     enabled: !!categoryId,
   });
 
+  // --- Derived ---
   const books = data?.books ?? [];
   const filterCategories = (categories ?? []).filter((c) =>
     HOME_CATEGORY_ORDER.includes(c.name)
@@ -50,7 +53,7 @@ export default function CategoryPage() {
           </h1>
         </FadeInUp>
 
-        {/* Filter trigger (mobile) */}
+        {/* Filter trigger */}
         <Sheet>
           <SheetTrigger asChild>
             <button
@@ -82,7 +85,7 @@ export default function CategoryPage() {
         </Sheet>
 
         <div className='flex gap-xl md:gap-5xl items-start'>
-          {/* Filter sidebar (desktop) */}
+          {/* Filter sidebar */}
           <FadeInLeft className='hidden md:block'>
             <FilterSidebar
               categories={filterCategories}
@@ -97,24 +100,28 @@ export default function CategoryPage() {
 
           {/* Book grid */}
           <div className='flex-1 min-w-0'>
+            {/* Loading state */}
             {isLoading && (
               <div className='flex justify-center mt-10'>
                 <span className='size-8 border-2 border-primary-300/30 border-t-primary-300 rounded-full animate-spin' />
               </div>
             )}
 
+            {/* Error state */}
             {isError && (
               <p className='text-sm text-accent-red text-center mt-10 tracking-t-2'>
                 Failed to load books.
               </p>
             )}
 
+            {/* Empty state */}
             {!isLoading && books.length === 0 && !isError && (
               <p className='text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10'>
                 No books in this category.
               </p>
             )}
 
+            {/* Book grid */}
             {books.length > 0 && (
               <div className='grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-xl md:gap-2xl'>
                 {books.map((book, index) => (

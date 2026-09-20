@@ -11,6 +11,7 @@ export default function CartMobileSummaryBar({
 }: CartMobileSummaryBarProps) {
   return (
     <div className='md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-card h-18 px-xl flex items-center justify-between'>
+      {/* Total */}
       <div className='flex flex-col'>
         <p className='font-medium text-neutral-950 tracking-t-3 text-sm'>
           Total Book
@@ -19,6 +20,7 @@ export default function CartMobileSummaryBar({
           {selectedCount} Items
         </p>
       </div>
+      {/* Borrow button */}
       <Button
         type='button'
         variant='primary'

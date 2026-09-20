@@ -9,6 +9,7 @@ import { SectionError } from './SectionState';
 export default function PopularAuthorsSection() {
   const navigate = useNavigate();
 
+  // --- Query ---
   const {
     data: authors,
     isLoading: authorsLoading,
@@ -27,6 +28,7 @@ export default function PopularAuthorsSection() {
         </h2>
       </FadeInUp>
 
+      {/* Loading state */}
       {authorsLoading && (
         <div
           role='status'
@@ -38,6 +40,7 @@ export default function PopularAuthorsSection() {
           ))}
         </div>
       )}
+      {/* Error state */}
       {authorsError && <SectionError message='Failed to load authors.' />}
 
       {/* Author grid */}

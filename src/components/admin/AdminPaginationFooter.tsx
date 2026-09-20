@@ -21,9 +21,11 @@ export default function AdminPaginationFooter({
 
   return (
     <FadeIn className="w-full">
+      {/* Mobile pager */}
       <div className="md:hidden">
         <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
       </div>
+      {/* Desktop footer */}
       <div className="hidden md:flex items-center justify-between w-full px-3xl py-lg">
         <span className="font-medium text-neutral-950 tracking-t-3 text-md whitespace-nowrap">
           Showing {from} to {to} of {total} entries

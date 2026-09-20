@@ -8,7 +8,6 @@ import api from './axios';
 const defaultAdapter = api.defaults.adapter;
 let lastConfig: InternalAxiosRequestConfig | undefined;
 
-// Replace the network with a fixed response, so the interceptors run for real.
 function respondWith(status: number, data: unknown) {
   api.defaults.adapter = (async (config: InternalAxiosRequestConfig) => {
     lastConfig = config;

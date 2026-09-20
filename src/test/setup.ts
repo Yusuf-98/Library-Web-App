@@ -8,8 +8,6 @@ afterEach(() => {
   localStorage.clear();
 });
 
-// jsdom has neither of these. Reduced motion makes the fade-in wrappers render
-// their children immediately instead of waiting for an intersection.
 window.matchMedia = (query: string) =>
   ({
     matches: query.includes('prefers-reduced-motion'),

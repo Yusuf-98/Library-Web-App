@@ -58,7 +58,6 @@ describe('useOverlayA11y', () => {
     rerender(<Page active onClose={onClose} />);
     expect(screen.getByLabelText('overlay input')).toHaveFocus();
 
-    // The trigger (not the overlay input that is about to unmount) must get focus back.
     rerender(<Page active={false} onClose={onClose} />);
     expect(trigger).toHaveFocus();
   });

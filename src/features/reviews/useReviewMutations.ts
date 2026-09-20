@@ -4,6 +4,7 @@ import { addReview, deleteReview } from '@/lib/api/reviews';
 import { queryKeys } from '@/lib/queryKeys';
 import { getErrorMessage } from '@/lib/utils';
 
+// --- Add and edit ---
 export function useUpsertReviewMutation(bookId: number | null) {
   const queryClient = useQueryClient();
 
@@ -21,6 +22,7 @@ export function useUpsertReviewMutation(bookId: number | null) {
   });
 }
 
+// --- Delete ---
 export function useDeleteReviewMutation(bookId: number) {
   const queryClient = useQueryClient();
 

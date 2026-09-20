@@ -8,7 +8,6 @@ import CategorySection from './CategorySection';
 
 vi.mock('@/lib/api/categories', () => ({ getCategories: vi.fn() }));
 
-// The nine categories the home page shows, plus one that it deliberately hides.
 const NAMES = ['Fiction', 'Non-Fiction', 'Self-Improvement', 'Finance', 'Science', 'Education', 'Lifestyle', 'Religious', 'Science-Fiction', 'Computer'];
 const categories = NAMES.map((name, i) => ({ id: i + 1, name }));
 

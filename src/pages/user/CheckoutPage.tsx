@@ -13,14 +13,17 @@ export default function CheckoutPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // --- Route state ---
   const stateItemIds = (location.state as { itemIds?: number[] } | null)
     ?.itemIds;
 
+  // --- Queries ---
   const { data, isLoading, isError } = useQuery({
     queryKey: queryKeys.cart.checkout,
     queryFn: getCheckout,
   });
 
+  // --- Derived ---
   const items = useMemo(() => {
     if (!data) return [];
     if (!stateItemIds) return data.items;
@@ -45,14 +48,14 @@ export default function CheckoutPage() {
             </div>
           )}
 
-          {/* Error / empty state */}
+          {/* Error state */}
           {(isError || (!isLoading && items.length === 0)) && (
             <p className='text-sm text-accent-red text-center py-10 tracking-t-2'>
               {isError ? 'Failed to load checkout.' : 'No items to checkout.'}
             </p>
           )}
 
-          {/* Summary + Borrow form */}
+          {/* Content */}
           {!isLoading && !isError && data && items.length > 0 && (
             <div className='flex flex-col md:flex-row gap-3xl md:gap-14.5 items-start justify-center w-full'>
               <FadeInUp className='min-w-0 w-full md:w-auto md:flex-[5.1] md:basis-76'>

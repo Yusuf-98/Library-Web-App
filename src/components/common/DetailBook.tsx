@@ -32,6 +32,7 @@ export default function DetailBook({
   isBorrowing,
   outOfStock,
 }: DetailBookProps) {
+  // --- Share ---
   const shareText = `${book.title} by ${book.author.name}`;
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
 
@@ -65,7 +66,7 @@ export default function DetailBook({
 
         <div className='flex-1 min-w-0 flex flex-col gap-[clamp(16px,calc(11.43px+0.595vw),20px)] w-full'>
           <div className='flex flex-col gap-[clamp(12px,calc(0.57px+1.488vw),22px)]'>
-            {/* Category, title, author, rating */}
+            {/* Heading */}
             <div className='flex flex-col gap-[clamp(2px,calc(-0.29px+0.298vw),4px)]'>
               <span className='inline-flex self-start border border-neutral-300 rounded-sm px-2 text-sm font-bold text-neutral-950 tracking-t-2'>
                 {book.category.name}
@@ -131,7 +132,7 @@ export default function DetailBook({
             </p>
           </div>
 
-          {/* Actions (desktop inline) */}
+          {/* Actions */}
           <div className='hidden md:flex items-center gap-lg'>
             <Button
               type='button'
@@ -159,7 +160,7 @@ export default function DetailBook({
         </div>
       </div>
 
-      {/* Actions (mobile sticky) */}
+      {/* Sticky bar */}
       <div className='md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-card px-4 py-4 flex items-center gap-3 z-50'>
         <Button
           type='button'
@@ -183,6 +184,7 @@ export default function DetailBook({
               ? 'Borrowing...'
               : 'Borrow Book'}
         </Button>
+        {/* Share menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button

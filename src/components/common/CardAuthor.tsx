@@ -53,7 +53,7 @@ export default function CardAuthor({
   );
 }
 
-/** Loading placeholder with the same box model as CardAuthor. */
+// --- Skeleton ---
 export function CardAuthorSkeleton({ className }: { className?: string }) {
   return (
     <div

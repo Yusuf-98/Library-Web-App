@@ -1,6 +1,7 @@
 import api from '@/lib/axios';
 import type { AdminLoan, Loan, Pagination } from '@/types';
 
+// --- User ---
 export interface LoansParams {
   status?: 'all' | 'active' | 'returned' | 'overdue';
   q?: string;
@@ -14,6 +15,7 @@ export const getMyLoans = (params?: LoansParams) =>
 export const borrowBook = (bookId: number, days: number) =>
   api.post<Loan>('/loans', { bookId, days }).then((r) => r.data);
 
+// --- Admin ---
 export interface AdminLoansParams {
   status?: 'all' | 'active' | 'returned' | 'overdue';
   q?: string;

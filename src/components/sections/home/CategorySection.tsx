@@ -16,6 +16,7 @@ const CATEGORY_SWIPE_THRESHOLD = 50;
 export default function CategorySection() {
   const navigate = useNavigate();
 
+  // --- Queries ---
   const {
     data: categories,
     isLoading: categoriesLoading,
@@ -25,9 +26,11 @@ export default function CategorySection() {
     queryFn: getCategories,
   });
 
+  // --- Carousel state ---
   const [categoryPage, setCategoryPage] = useState(0);
   const categoryPointerStartX = useRef<number | null>(null);
 
+  // --- Derived ---
   const orderedCategories = HOME_CATEGORY_ORDER.map((name) =>
     (categories ?? []).find((c) => c.name.toLowerCase() === name.toLowerCase())
   ).filter((c): c is NonNullable<typeof c> => !!c);
@@ -36,6 +39,7 @@ export default function CategorySection() {
     CATEGORY_WINDOW_STARTS[categoryPage] + CATEGORY_WINDOW
   );
 
+  // --- Swipe handlers ---
   const handleCategoryPointerDown = (e: React.PointerEvent) => {
     categoryPointerStartX.current = e.clientX;
   };
@@ -51,7 +55,7 @@ export default function CategorySection() {
 
   return (
     <>
-      {/* Pagination dots (the row is reserved while loading so the categories don't jump down) */}
+      {/* Dots */}
       {(categoriesLoading ||
         (!categoriesError && orderedCategories.length > CATEGORY_WINDOW)) && (
           <FadeInUp>
@@ -64,7 +68,7 @@ export default function CategorySection() {
                     className='size-6 -my-[9px] md:-my-2'
                   />
                 ) : (
-                  // 24px hit area around a small dot; the negative margin keeps the row as tall as the dots.
+                  // Dot
                   <button
                     key={i}
                     type='button'
@@ -89,6 +93,7 @@ export default function CategorySection() {
 
       {/* Category */}
       <section className='flex flex-col gap-lg'>
+        {/* Loading state */}
         {categoriesLoading && (
           <div role='status' className='grid grid-cols-3 gap-lg md:flex md:gap-xl'>
             <span className='sr-only'>Loading categories</span>
@@ -99,10 +104,12 @@ export default function CategorySection() {
             ))}
           </div>
         )}
+        {/* Error state */}
         {categoriesError && (
           <SectionError message='Failed to load categories.' />
         )}
 
+        {/* Categories */}
         {!categoriesLoading && !categoriesError && (
           <div
             className='grid grid-cols-3 gap-lg md:flex md:gap-xl'

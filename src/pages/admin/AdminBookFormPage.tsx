@@ -22,6 +22,7 @@ export default function AdminBookFormPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // --- Queries ---
   const { data: categories } = useQuery({
     queryKey: queryKeys.categories.all,
     queryFn: getCategories,
@@ -35,6 +36,7 @@ export default function AdminBookFormPage() {
     enabled: isEdit,
   });
 
+  // --- Form state ---
   const [title, setTitle] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -46,6 +48,7 @@ export default function AdminBookFormPage() {
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // --- Edit seeding ---
   const [seededBookId, setSeededBookId] = useState<number | null>(null);
   if (existingBook && seededBookId !== existingBook.id) {
     setSeededBookId(existingBook.id);
@@ -60,6 +63,7 @@ export default function AdminBookFormPage() {
     setDescription(existingBook.description ?? '');
   }
 
+  // --- Cover handlers ---
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -74,6 +78,7 @@ export default function AdminBookFormPage() {
 
   const currentCoverSrc = coverPreview ?? existingBook?.coverImage;
 
+  // --- Mutation ---
   const { mutate: submit, isPending } = useMutation({
     mutationFn: () => {
       const payload = {
@@ -112,6 +117,7 @@ export default function AdminBookFormPage() {
     },
   });
 
+  // --- Submit ---
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !isbn || !categoryId) {
@@ -121,6 +127,7 @@ export default function AdminBookFormPage() {
     submit();
   };
 
+  // --- Loading state ---
   if (isEdit && isLoadingBook) {
     return (
       <div className='flex justify-center py-10'>
@@ -136,7 +143,7 @@ export default function AdminBookFormPage() {
           onSubmit={handleSubmit}
           className='flex flex-col gap-xl w-full'
         >
-          {/* Header: back button + title */}
+          {/* Header */}
           <div className='flex items-center gap-1.5 md:gap-lg'>
             <button
               type='button'

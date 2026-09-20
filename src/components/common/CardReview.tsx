@@ -68,7 +68,7 @@ export default function CardReview({
         )}
       </div>
 
-      {/* Stars + Comment */}
+      {/* Content */}
       <div className="flex flex-col gap-md w-full">
         <div className="flex items-center">
           {Array.from({ length: 5 }).map((_, i) => (

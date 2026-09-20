@@ -9,12 +9,14 @@ import LoansListSection from '@/components/sections/my-loans/LoansListSection';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 
 export default function MyLoansPage() {
+  // --- State ---
   const [status, setStatus] =
     useState<NonNullable<LoansParams['status']>>('all');
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query);
   const [reviewBookId, setReviewBookId] = useState<number | null>(null);
 
+  // --- Queries ---
   const {
     data,
     isLoading,
@@ -33,6 +35,7 @@ export default function MyLoansPage() {
         : undefined,
   });
 
+  // --- Derived ---
   const loans = data?.pages.flatMap((p) => p.loans) ?? [];
 
   return (
@@ -45,7 +48,7 @@ export default function MyLoansPage() {
           </h1>
         </FadeInUp>
 
-        {/* Search + filter */}
+        {/* Filters */}
         <LoansFilterBar
           query={query}
           onQueryChange={setQuery}

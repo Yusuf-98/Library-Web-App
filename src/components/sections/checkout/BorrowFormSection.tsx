@@ -9,6 +9,7 @@ import checkIcon from '@/assets/icons/check.svg';
 
 const DURATIONS: (3 | 5 | 10)[] = [3, 5, 10];
 
+// --- Radio ---
 function Radio({ checked }: { checked: boolean }) {
   return (
     <div
@@ -27,6 +28,7 @@ interface BorrowFormSectionProps {
 }
 
 export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
+  // --- State ---
   const [borrowDate, setBorrowDate] = useState(todayLocalISO());
   const [days, setDays] = useState<3 | 5 | 10>(3);
   const [agreeReturn, setAgreeReturn] = useState(false);
@@ -34,11 +36,13 @@ export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
 
   const returnDate = addDaysISO(borrowDate, days);
 
+  // --- Mutation ---
   const { mutate: confirmBorrow, isPending } = useBorrowMutation(items);
 
   const canSubmit =
     items.length > 0 && agreeReturn && agreePolicy && !isPending;
 
+  // --- Handlers ---
   const handleSubmit = () => {
     if (items.length === 0) return;
     if (!agreeReturn || !agreePolicy) {
@@ -50,6 +54,7 @@ export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
 
   return (
     <div className='bg-white shadow-card rounded-3xl flex flex-col gap-xl md:gap-3xl p-xl md:p-2xl w-full'>
+      {/* Heading */}
       <p className='font-bold text-neutral-950 tracking-t-2 text-xl md:text-[clamp(20px,calc(10.86px+1.19vw),28px)]'>
         Complete Your Borrow Request
       </p>
@@ -142,6 +147,7 @@ export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
         </label>
       </div>
 
+      {/* Submit */}
       <Button
         type='button'
         variant='primary'

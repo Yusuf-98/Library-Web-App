@@ -51,7 +51,7 @@ function App() {
       <ScrollToTop />
       <Suspense fallback={<PageFallback />}>
         <Routes>
-          {/* Public, browsable without login */}
+          {/* Public */}
           <Route element={<UserLayout />}>
             <Route path='/' element={<HomePage />} />
             <Route path='/books/:id' element={<BookDetailPage />} />
@@ -62,7 +62,7 @@ function App() {
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
 
-          {/* User (requires login) */}
+          {/* User */}
           <Route element={<ProtectedRoute />}>
             <Route path='/checkout/success' element={<SuccessPage />} />
             <Route element={<UserLayout />}>

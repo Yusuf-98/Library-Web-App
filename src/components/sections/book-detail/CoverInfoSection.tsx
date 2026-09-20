@@ -23,6 +23,7 @@ export default function CoverInfoSection({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // --- Mutations ---
   const { mutate: borrowNow, isPending: isBorrowing } = useMutation({
     mutationFn: () => addCartItem(bookId),
     onSuccess: (cartItem) => {
@@ -38,7 +39,7 @@ export default function CoverInfoSection({
           return;
         }
       } catch {
-        // ignore, fall through to error toast
+        // ignore
       }
       toast.error(getErrorMessage(error, 'Failed to start borrow request. Please try again.'));
     },
@@ -55,6 +56,7 @@ export default function CoverInfoSection({
     },
   });
 
+  // --- Handlers ---
   const handleAddToCart = () => {
     if (!user) {
       navigate('/login');
@@ -71,6 +73,7 @@ export default function CoverInfoSection({
     borrowNow();
   };
 
+  // --- Derived ---
   const outOfStock = (book?.availableCopies ?? 0) <= 0;
 
   return (

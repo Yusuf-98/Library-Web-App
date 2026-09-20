@@ -8,7 +8,6 @@ interface CoverImageSectionProps {
   fileInputRef: RefObject<HTMLInputElement | null>;
   onCoverChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDeleteImage: () => void;
-  // Only a newly picked file can be discarded; the API has no way to remove a saved cover.
   canDelete: boolean;
 }
 
@@ -24,6 +23,7 @@ export default function CoverImageSection({
       <label className='text-sm font-bold text-neutral-950 tracking-t-2 w-full'>
         Cover Image
       </label>
+      {/* Cover */}
       {currentCoverSrc ? (
         <div className='bg-white border border-dashed border-neutral-300 rounded-xl flex flex-col items-center gap-lg px-3xl py-xl w-full'>
           <img
@@ -83,6 +83,7 @@ export default function CoverImageSection({
           </div>
         </button>
       )}
+      {/* File input */}
       <input
         ref={fileInputRef}
         type='file'

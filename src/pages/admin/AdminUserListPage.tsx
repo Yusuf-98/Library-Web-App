@@ -10,6 +10,7 @@ import { queryKeys } from '@/lib/queryKeys';
 const COLUMNS = ['No', 'Name', 'Nomor Handphone', 'Email', 'Created at'];
 
 export default function AdminUserListPage() {
+  // --- Query ---
   const { query, setQuery, debouncedQuery, page, setPage } = usePagedSearch();
   const limit = 10;
 
@@ -18,6 +19,7 @@ export default function AdminUserListPage() {
     queryFn: () => getAdminUsers({ q: debouncedQuery || undefined, page, limit }),
   });
 
+  // --- Derived ---
   const users = data?.users ?? [];
   const pagination = data?.pagination;
   const from = pagination ? (pagination.page - 1) * pagination.limit + 1 : 0;
@@ -69,7 +71,7 @@ export default function AdminUserListPage() {
 
         {users.length > 0 && (
           <>
-            {/* Mobile: stacked cards */}
+            {/* Cards */}
             <div className='flex flex-col gap-3.75 w-full md:hidden'>
               {users.map((u, index) => (
                 <FadeInUp
@@ -131,7 +133,7 @@ export default function AdminUserListPage() {
               )}
             </div>
 
-            {/* Desktop: table */}
+            {/* Table */}
             <div className='hidden md:flex bg-white border border-neutral-300 shadow-[0px_0px_12px_rgba(203,202,202,0.2)] rounded-xl flex-col items-start p-xl w-full'>
               <div className='w-full'>
                 {/* Header row */}

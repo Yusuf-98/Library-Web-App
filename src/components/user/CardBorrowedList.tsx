@@ -37,7 +37,7 @@ export default function CardBorrowedList({
 
   return (
     <div className={cn('bg-white rounded-2xl shadow-card flex flex-col gap-xl md:gap-2xl p-xl md:p-2xl w-full', className)}>
-      {/* Status + Due Date */}
+      {/* Status */}
       <div className="flex items-start justify-between w-full flex-wrap gap-xs">
         <div className="flex items-center gap-xs md:gap-lg">
           <span className="font-bold text-neutral-950 tracking-t-2 text-sm md:text-md">Status</span>
@@ -55,7 +55,7 @@ export default function CardBorrowedList({
 
       <div className="h-px w-full bg-neutral-300" />
 
-      {/* Book info + action */}
+      {/* Book */}
       <div className="flex flex-col gap-3xl md:gap-0 md:flex-row md:items-center md:justify-between w-full">
         <BookInfo
           cover={cover}

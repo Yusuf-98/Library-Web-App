@@ -1,4 +1,5 @@
 export const queryKeys = {
+  // --- User ---
   cart: {
     all: ['cart'] as const,
     checkout: ['cart', 'checkout'] as const,
@@ -31,6 +32,7 @@ export const queryKeys = {
   me: {
     all: ['me'] as const,
   },
+  // --- Admin ---
   admin: {
     users: (query: string, page: number) =>
       ['admin', 'users', query, page] as const,

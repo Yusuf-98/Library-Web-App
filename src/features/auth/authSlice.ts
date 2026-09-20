@@ -6,6 +6,7 @@ interface AuthState {
   token: string | null;
 }
 
+// --- Storage ---
 const TOKEN_KEY = 'booky_token';
 const USER_KEY  = 'booky_user';
 
@@ -17,6 +18,7 @@ const initialState: AuthState = {
   })(),
 };
 
+// --- Slice ---
 const authSlice = createSlice({
   name: 'auth',
   initialState,

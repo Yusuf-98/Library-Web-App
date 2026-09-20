@@ -58,7 +58,7 @@ export default function CardBook({
   );
 }
 
-/** Loading placeholder with the same box model as CardBook, so nothing moves when the real card arrives. */
+// --- Skeleton ---
 export function CardBookSkeleton({ className }: { className?: string }) {
   return (
     <div

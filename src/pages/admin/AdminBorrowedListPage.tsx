@@ -29,14 +29,17 @@ function formatLong(dateStr: string) {
 export default function AdminBorrowedListPage() {
   const queryClient = useQueryClient();
 
+  // --- State ---
   const [status, setStatus] = useState<NonNullable<AdminLoansParams['status']>>('all');
   const { query, setQuery, debouncedQuery, page, setPage } = usePagedSearch();
 
+  // --- Queries ---
   const { data, isLoading, isError } = useQuery({
     queryKey: queryKeys.admin.loans.list(status, debouncedQuery, page),
     queryFn: () => getAdminLoans({ status, q: debouncedQuery || undefined, page, limit: 10 }),
   });
 
+  // --- Mutations ---
   const { mutate: markReturned } = useMutation({
     mutationFn: (id: number) => updateAdminLoan(id, { status: 'RETURNED' }),
     onSuccess: () => {
@@ -48,6 +51,7 @@ export default function AdminBorrowedListPage() {
     },
   });
 
+  // --- Derived ---
   const loans = data?.loans ?? [];
 
   return (

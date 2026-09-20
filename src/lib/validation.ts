@@ -1,3 +1,4 @@
+// --- Types ---
 export interface RegisterValues {
   name: string;
   email: string;
@@ -8,11 +9,11 @@ export interface RegisterValues {
 
 export type RegisterErrors = Partial<Record<keyof RegisterValues, string>>;
 
-// Mirrors the backend rules ("Valid email required", "Min 6 chars password"),
-// so users see the problem before a round trip.
+// --- Rules ---
 export const MIN_PASSWORD_LENGTH = 6;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// --- Register form ---
 export function validateRegistration(values: RegisterValues): RegisterErrors {
   const errors: RegisterErrors = {};
 

@@ -3,22 +3,26 @@ import { store } from '@/app/store';
 import { logout } from '@/features/auth/authSlice';
 import { ApiError } from '@/lib/apiError';
 
+// --- Types ---
 interface ApiEnvelope<T> {
   success: boolean;
   message: string;
   data: T;
 }
 
+// --- Client ---
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
+// --- Auth header ---
 api.interceptors.request.use((config) => {
   const token = store.getState().auth.token;
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
+// --- Response handling ---
 api.interceptors.response.use(
   (response) => {
     const envelope = response.data as ApiEnvelope<unknown>;

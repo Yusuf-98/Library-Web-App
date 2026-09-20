@@ -32,7 +32,7 @@ export default function SuccessPage() {
           {/* Success icon */}
           <img src={successCheck} alt='' className='size-29.25 mb-4' />
 
-          {/* Title + subtitle */}
+          {/* Heading */}
           <div className='flex flex-col items-center gap-md text-center w-full'>
             <p className='font-bold text-neutral-950 tracking-t-2 text-xl md:text-[clamp(20px,calc(10.86px+1.19vw),28px)]'>
               Borrowing Successful!

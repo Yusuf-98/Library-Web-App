@@ -44,7 +44,7 @@ export default function ReviewsSection({ bookId, book, user }: ReviewsSectionPro
   return (
     <>
       <div className='flex flex-col gap-4.5'>
-        {/* Title + rating */}
+        {/* Heading */}
         <FadeInUp>
           <div className='flex flex-col gap-1 md:gap-[clamp(4px,calc(-5.14px+1.19vw),12px)]'>
             <h2 className='font-bold text-neutral-950 text-display-xs md:text-[clamp(24px,calc(10.29px+1.786vw),36px)]'>

@@ -9,6 +9,7 @@ interface ProfileCardProps {
 }
 
 export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) {
+  // --- State ---
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -17,6 +18,7 @@ export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) 
   const [showAvatarTooltip, setShowAvatarTooltip] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // --- Data ---
   const { data, isLoading, isError } = useMyProfile();
 
   const profile = data?.profile;
@@ -28,6 +30,7 @@ export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) 
     handleLoad: handleAvatarLoad,
   } = useImageError(avatarSrc);
 
+  // --- Handlers ---
   const startEditing = () => {
     if (!profile) return;
     setName(profile.name);
@@ -55,18 +58,21 @@ export default function ProfileCard({ idPrefix = 'profile' }: ProfileCardProps) 
 
   return (
     <>
+      {/* Loading state */}
       {isLoading && (
         <div className='flex justify-center py-10'>
           <span className='size-8 border-2 border-primary-300/30 border-t-primary-300 rounded-full animate-spin' />
         </div>
       )}
 
+      {/* Error state */}
       {isError && (
         <p className='text-sm text-accent-red text-center py-10 tracking-t-2'>
           Failed to load your profile.
         </p>
       )}
 
+      {/* Profile card */}
       {profile && (
         <div className='bg-white rounded-2xl shadow-card flex flex-col gap-xl md:gap-3xl p-xl md:p-2xl w-full mb-3.75 md:mb-[clamp(15.04px,calc(4.8px+1.333vw),24px)]'>
           <div className='flex flex-col gap-md md:gap-lg w-full'>

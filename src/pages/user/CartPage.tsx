@@ -16,6 +16,7 @@ export default function CartPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // --- Queries ---
   const {
     data: cart,
     isLoading,
@@ -25,6 +26,7 @@ export default function CartPage() {
     queryFn: getCart,
   });
 
+  // --- Selection ---
   const [selectedIds, setSelectedIds] = useState<Set<number> | null>(null);
   const [seededCart, setSeededCart] = useState<typeof cart>(undefined);
 
@@ -33,6 +35,7 @@ export default function CartPage() {
     setSelectedIds(new Set(cart.items.map((i) => i.id)));
   }
 
+  // --- Mutations ---
   const { mutate: removeItem } = useMutation({
     mutationFn: (itemId: number) => removeCartItem(itemId),
     onSuccess: () => {
@@ -44,11 +47,13 @@ export default function CartPage() {
     },
   });
 
+  // --- Derived ---
   const items = cart?.items ?? [];
   const allSelected =
     items.length > 0 && items.every((i) => selectedIds?.has(i.id));
   const selectedCount = items.filter((i) => selectedIds?.has(i.id)).length;
 
+  // --- Handlers ---
   const toggleAll = () => {
     if (!cart) return;
     setSelectedIds(
@@ -119,7 +124,7 @@ export default function CartPage() {
             </div>
           )}
 
-          {/* Item list + summary */}
+          {/* Cart */}
           {items.length > 0 && (
             <div className='flex gap-5xl items-start justify-center w-full'>
               <CartItemListSection
@@ -141,7 +146,7 @@ export default function CartPage() {
         </div>
       </main>
 
-      {/* Sticky summary (mobile) */}
+      {/* Sticky summary */}
       {items.length > 0 && (
         <CartMobileSummaryBar
           selectedCount={selectedCount}

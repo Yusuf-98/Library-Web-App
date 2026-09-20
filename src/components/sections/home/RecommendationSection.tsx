@@ -10,6 +10,7 @@ import { SectionError } from './SectionState';
 export default function RecommendationSection() {
   const navigate = useNavigate();
 
+  // --- Query ---
   const {
     data: booksData,
     isLoading: booksLoading,
@@ -27,6 +28,7 @@ export default function RecommendationSection() {
         : undefined,
   });
 
+  // --- Derived ---
   const books = booksData?.pages.flatMap((p) => p.books) ?? [];
 
   return (
@@ -38,6 +40,7 @@ export default function RecommendationSection() {
         </h2>
       </FadeInUp>
 
+      {/* Loading state */}
       {booksLoading && (
         <div
           role='status'
@@ -49,8 +52,10 @@ export default function RecommendationSection() {
           ))}
         </div>
       )}
+      {/* Error state */}
       {booksError && <SectionError message='Failed to load books.' />}
 
+      {/* Empty state */}
       {!booksLoading && !booksError && books.length === 0 && (
         <p className='text-sm font-medium text-neutral-500 tracking-t-2 py-6 text-center'>
           No books available.
@@ -75,6 +80,7 @@ export default function RecommendationSection() {
         </div>
       )}
 
+      {/* Load more */}
       {hasNextPage && (
         <FadeInUp className='mx-auto'>
           <Button

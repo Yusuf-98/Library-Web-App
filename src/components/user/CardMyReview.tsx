@@ -25,14 +25,17 @@ export default function CardMyReview({
 }: CardMyReviewProps) {
   return (
     <div className={cn('bg-white rounded-2xl shadow-card flex flex-col gap-xl md:gap-2xl p-xl md:p-2xl w-full', className)}>
+      {/* Date */}
       <p className="font-semibold text-neutral-950 tracking-t-2 text-sm md:text-md">{createdAt}</p>
 
       <div className="h-px w-full bg-neutral-300" />
 
+      {/* Book */}
       <BookInfo cover={cover} title={title} author={author} category={category} />
 
       <div className="h-px w-full bg-neutral-300" />
 
+      {/* Review */}
       <div className="flex flex-col gap-md w-full">
         <div className="flex gap-0.5 items-center">
           {Array.from({ length: 5 }).map((_, i) => (

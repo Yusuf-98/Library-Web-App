@@ -14,6 +14,7 @@ export default class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
+  // --- Capture ---
   state: ErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError(): ErrorBoundaryState {
@@ -24,6 +25,7 @@ export default class ErrorBoundary extends Component<
     console.error('Unhandled render error:', error, info.componentStack);
   }
 
+  // --- Fallback ---
   render() {
     if (!this.state.hasError) return this.props.children;
 
@@ -32,7 +34,9 @@ export default class ErrorBoundary extends Component<
         role='alert'
         className='min-h-screen bg-neutral-25 flex flex-col items-center justify-center gap-6 px-6 text-center'
       >
+        {/* Logo */}
         <img src={logoBooky} alt='' className='size-16 object-contain' />
+        {/* Message */}
         <div className='flex flex-col gap-2 max-w-100'>
           <h1 className='text-display-xs md:text-display-sm font-bold text-neutral-950'>
             Something went wrong
@@ -41,6 +45,7 @@ export default class ErrorBoundary extends Component<
             An unexpected error occurred. Reload the page to try again.
           </p>
         </div>
+        {/* Actions */}
         <div className='flex flex-col sm:flex-row gap-3 w-full sm:w-auto'>
           <Button type='button' onClick={() => window.location.reload()} className='sm:w-45'>
             Reload page

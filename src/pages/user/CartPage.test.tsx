@@ -47,7 +47,6 @@ function setup() {
   return userEvent.setup();
 }
 
-// Both the desktop panel and the mobile bar are in the DOM (CSS hides one), so take the first.
 const borrowButton = () => screen.getAllByRole('button', { name: 'Borrow Book' })[0];
 const checkboxes = () => screen.getAllByRole('checkbox'); // [Select All, ...items]
 const itemCount = (n: number) => screen.getAllByText(`${n} Items`).length > 0;
@@ -129,7 +128,7 @@ describe('CartPage', () => {
     vi.mocked(getCart).mockResolvedValue(two);
     const user = setup();
     await screen.findByText('Clean Code');
-    await user.click(checkboxes()[1]); // deselect Clean Code (cart item 11)
+    await user.click(checkboxes()[1]);
 
     await user.click(borrowButton());
 

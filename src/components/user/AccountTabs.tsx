@@ -5,6 +5,7 @@ import { useRovingTabs } from '@/hooks/useRovingTabs';
 
 export type AccountTab = 'profile' | 'loans' | 'reviews';
 
+// --- Config ---
 const TABS: { key: AccountTab; label: string; path: string }[] = [
   { key: 'profile', label: 'Profile', path: '/profile' },
   { key: 'loans', label: 'Borrowed List', path: '/loans' },
@@ -14,6 +15,7 @@ const TABS: { key: AccountTab; label: string; path: string }[] = [
 const TABPANEL_ID = 'account-tabpanel';
 const tabId = (key: AccountTab) => `account-tab-${key}`;
 
+// --- Tab list ---
 export default function AccountTabs({ active }: { active: AccountTab }) {
   const navigate = useNavigate();
   const { tabRefs, onKeyDown } = useRovingTabs(TABS.length);
@@ -55,6 +57,7 @@ export default function AccountTabs({ active }: { active: AccountTab }) {
   );
 }
 
+// --- Panel ---
 export function AccountTabPanel({
   active,
   children,

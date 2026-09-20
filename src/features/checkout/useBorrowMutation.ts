@@ -12,6 +12,7 @@ import { borrowFromCart } from '@/lib/api/cart';
 import { queryKeys } from '@/lib/queryKeys';
 import { addDaysISO, getErrorMessage } from '@/lib/utils';
 
+// --- Types ---
 interface BorrowVariables {
   days: 3 | 5 | 10;
   borrowDate: string;
@@ -35,6 +36,7 @@ export function useBorrowMutation(items: CartItem[]) {
   >({
     mutationFn: ({ days, borrowDate }) =>
       borrowFromCart(itemIds, days, borrowDate),
+    // --- Optimistic update ---
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKeys.cart.all });
       await Promise.all(
@@ -80,6 +82,7 @@ export function useBorrowMutation(items: CartItem[]) {
 
       return { previousCartQueries, previousBookQueries };
     },
+    // --- Rollback ---
     onError: (error, _vars, context) => {
       context?.previousCartQueries.forEach(([key, data]) => {
         queryClient.setQueryData(key, data);
@@ -91,6 +94,7 @@ export function useBorrowMutation(items: CartItem[]) {
         getErrorMessage(error, 'Failed to confirm borrow request. Please try again.')
       );
     },
+    // --- Result handling ---
     onSuccess: (result, variables) => {
       if (result.loans.length === 0) {
         toast.error(
@@ -107,10 +111,6 @@ export function useBorrowMutation(items: CartItem[]) {
         );
       }
 
-      // Navigating here (not via mutate()'s call-level onSuccess) is
-      // deliberate: onMutate's optimistic cart update can empty the
-      // checkout list and unmount BorrowFormSection before the request
-      // settles, which silently drops call-level callbacks.
       navigate('/checkout/success', {
         state: {
           itemCount: result.loans.length,
@@ -118,6 +118,7 @@ export function useBorrowMutation(items: CartItem[]) {
         },
       });
     },
+    // --- Refetch ---
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cart.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.loans.all });

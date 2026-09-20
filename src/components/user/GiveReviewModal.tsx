@@ -14,12 +14,15 @@ interface GiveReviewModalProps {
 }
 
 export default function GiveReviewModal({ bookId, initialReview, onOpenChange }: GiveReviewModalProps) {
+  // --- State ---
   const isEditing = !!initialReview;
   const [rating, setRating] = useState(initialReview?.star ?? 0);
   const [comment, setComment] = useState(initialReview?.comment ?? '');
 
+  // --- Mutation ---
   const { mutate: submit, isPending } = useUpsertReviewMutation(bookId);
 
+  // --- Handlers ---
   const handleSubmit = () => {
     if (rating === 0 || comment.trim().length === 0) {
       toast.error('Please add a rating and comment.');

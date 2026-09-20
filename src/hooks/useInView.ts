@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-/** Tracks whether an element has scrolled into the viewport, once. */
 export function useInView<T extends HTMLElement>(threshold = 0.15) {
   const ref = useRef<T>(null);
   const [isInView, setIsInView] = useState(false);

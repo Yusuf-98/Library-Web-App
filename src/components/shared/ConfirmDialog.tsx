@@ -28,7 +28,7 @@ export default function ConfirmDialog({
           showCloseButton={false}
           className="max-w-[calc(100%-var(--spacing-4xl))] md:max-w-113 flex flex-col gap-xl md:gap-4xl p-2xl rounded-2xl bg-white"
         >
-          {/* Title + description */}
+          {/* Heading */}
           <div className="flex flex-col gap-lg w-full">
             <p className="font-bold text-neutral-950 tracking-t-2 md:tracking-t-3 text-md md:text-lg">{title}</p>
             <p className="font-semibold text-neutral-950 tracking-t-2 text-sm md:text-md">{description}</p>

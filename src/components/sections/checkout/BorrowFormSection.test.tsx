@@ -13,7 +13,6 @@ const items = [{ id: 11 }] as CartItem[];
 
 beforeEach(() => {
   mutate.mockClear();
-  // 9:00 PM on Sep 20 in Toronto, when the UTC date is already Sep 21
   vi.stubEnv('TZ', 'America/Toronto');
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date('2026-09-21T01:00:00Z'));

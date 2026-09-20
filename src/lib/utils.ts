@@ -1,14 +1,17 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+// --- Classes ---
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// --- Errors ---
 export function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback
 }
 
+// --- Dates ---
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
@@ -24,7 +27,6 @@ export function formatReviewDate(dateString: string) {
   return `${day} ${month} ${year}, ${hours}:${minutes}`
 }
 
-// Today in the user's local timezone as YYYY-MM-DD (toISOString() would give the UTC date).
 export function todayLocalISO() {
   const now = new Date()
   const month = String(now.getMonth() + 1).padStart(2, '0')
@@ -32,7 +34,6 @@ export function todayLocalISO() {
   return `${now.getFullYear()}-${month}-${day}`
 }
 
-// UTC arithmetic on a YYYY-MM-DD string so DST changes can't shift the result.
 export function addDaysISO(isoDate: string, days: number) {
   const [year, month, day] = isoDate.split('-').map(Number)
   return new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10)

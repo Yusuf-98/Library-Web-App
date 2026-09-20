@@ -14,11 +14,13 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // --- Form state ---
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // --- Mutation ---
   const { mutate: login, isPending } = useMutation({
     mutationFn: () => loginApi(email, password),
     onSuccess: (data) => {
@@ -30,6 +32,7 @@ export default function LoginPage() {
     },
   });
 
+  // --- Handlers ---
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');

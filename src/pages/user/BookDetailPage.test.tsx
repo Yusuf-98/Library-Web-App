@@ -16,7 +16,6 @@ vi.mock('@/lib/api/cart', () => ({ getCart: vi.fn() }));
 
 function renderAt(path: string) {
   const store = configureStore({ reducer: { auth: authReducer } });
-  // The app's real retry policy, without the wait between attempts.
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: shouldRetry, retryDelay: 0 } },
   });

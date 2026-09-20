@@ -27,7 +27,7 @@ describe('usePagedSearch', () => {
     act(() => result.current.setPage(3));
 
     act(() => result.current.setQuery('harry'));
-    expect(result.current.page).toBe(3); // the old query is not refetched for page 1
+    expect(result.current.page).toBe(3);
 
     act(() => vi.advanceTimersByTime(300));
     expect(result.current.page).toBe(1);

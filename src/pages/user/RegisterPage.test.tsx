@@ -116,7 +116,6 @@ describe('RegisterPage', () => {
     vi.mocked(loginApi).mockResolvedValue({ token: 'jwt-token', user });
     const { store, user: u } = setup();
 
-    // (an <input type="email"> already strips surrounding spaces, so only name and phone need trimming)
     await fillForm(u, {
       Name: '  Yusuf  ',
       Email: 'yusuf@example.com',

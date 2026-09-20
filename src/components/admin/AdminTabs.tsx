@@ -5,6 +5,7 @@ import { useRovingTabs } from '@/hooks/useRovingTabs';
 
 export type AdminTab = 'loans' | 'users' | 'books';
 
+// --- Config ---
 const TABS: { key: AdminTab; label: string; path: string }[] = [
   { key: 'loans', label: 'Borrowed List', path: '/admin/loans' },
   { key: 'users', label: 'User', path: '/admin/users' },
@@ -14,6 +15,7 @@ const TABS: { key: AdminTab; label: string; path: string }[] = [
 const TABPANEL_ID = 'admin-tabpanel';
 const tabId = (key: AdminTab) => `admin-tab-${key}`;
 
+// --- Tab list ---
 export default function AdminTabs({ active }: { active: AdminTab }) {
   const navigate = useNavigate();
   const { tabRefs, onKeyDown } = useRovingTabs(TABS.length);
@@ -55,6 +57,7 @@ export default function AdminTabs({ active }: { active: AdminTab }) {
   );
 }
 
+// --- Panel ---
 export function AdminTabPanel({
   active,
   children,

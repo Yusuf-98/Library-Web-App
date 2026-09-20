@@ -27,6 +27,7 @@ export default function ListCart({
   return (
     <div className={cn('flex items-start justify-between gap-xl w-full', className)}>
       <div className="flex items-start gap-xl">
+        {/* Checkbox */}
         <button
           type="button"
           role="checkbox"
@@ -40,9 +41,11 @@ export default function ListCart({
           {checked && <img src={checkIcon} alt="" className="size-3.5" />}
         </button>
 
+        {/* Book */}
         <BookInfo cover={cover} title={title} author={author} category={category} />
       </div>
 
+      {/* Remove */}
       <button
         type="button"
         onClick={onRemove}

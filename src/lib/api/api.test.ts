@@ -10,8 +10,6 @@ import { borrowBook, getAdminLoans, getMyLoans, updateAdminLoan } from './loans'
 import { addReview, deleteReview, getMyReviews, getReviews } from './reviews';
 import { getAdminUsers, getMyProfile, updateMyProfile } from './users';
 
-// These tests pin down the contract the app has with the backend: which path, method,
-// query string and body each function sends, and which part of the { data } envelope it returns.
 const defaultAdapter = api.defaults.adapter;
 let sent: InternalAxiosRequestConfig;
 

@@ -13,6 +13,7 @@ interface BookInfoProps {
   children?: ReactNode;
 }
 
+// --- Styles ---
 const DEFAULT_COVER =
   'w-17.5 h-26.5 md:w-[clamp(70.08px,calc(45.03px+3.262vw),92px)] md:h-[clamp(106.08px,calc(69.51px+4.762vw),138.08px)] object-cover shrink-0';
 const DEFAULT_TITLE =
@@ -30,7 +31,9 @@ export default function BookInfo({
 }: BookInfoProps) {
   return (
     <div className={cn('flex items-center gap-lg md:gap-xl', className)}>
+      {/* Cover */}
       <img src={optimizeImageUrl(cover, 200)} alt={title} loading="lazy" className={cn(DEFAULT_COVER, coverClassName)} />
+      {/* Details */}
       <div className="flex flex-col gap-xs w-49">
         <span className="inline-flex self-start border border-neutral-300 rounded-sm px-md text-sm font-bold text-neutral-950 tracking-t-2">
           {category}

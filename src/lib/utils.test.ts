@@ -7,7 +7,6 @@ import {
   todayLocalISO,
 } from './utils';
 
-// unstubEnvs (vite.config.ts) restores TZ after every test.
 function setTimezone(tz: string) {
   vi.stubEnv('TZ', tz);
 }
@@ -18,10 +17,8 @@ afterEach(() => {
 
 describe('todayLocalISO', () => {
   it.each([
-    // 9 PM in Toronto: the UTC date is already tomorrow
     ['America/Toronto', '2026-09-21T01:00:00Z', '2026-09-20'],
     ['America/Los_Angeles', '2026-09-21T03:30:00Z', '2026-09-20'],
-    // 1:30 AM in Jakarta: the UTC date is still yesterday
     ['Asia/Jakarta', '2026-09-20T18:30:00Z', '2026-09-21'],
     ['UTC', '2026-09-20T12:00:00Z', '2026-09-20'],
   ])('%s at %s -> %s', (tz, now, expected) => {
@@ -38,9 +35,9 @@ describe('addDaysISO', () => {
     (tz) => {
       it.each([
         ['2026-09-20', 3, '2026-09-23'],
-        ['2026-03-06', 3, '2026-03-09'], // US DST starts on Mar 8
+        ['2026-03-06', 3, '2026-03-09'],
         ['2026-03-06', 10, '2026-03-16'],
-        ['2026-10-30', 3, '2026-11-02'], // US DST ends on Nov 1
+        ['2026-10-30', 3, '2026-11-02'],
         ['2026-12-30', 3, '2027-01-02'],
         ['2028-02-27', 3, '2028-03-01'], // leap year
       ])('%s + %i days = %s', (start, days, expected) => {

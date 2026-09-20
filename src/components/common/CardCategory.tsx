@@ -43,7 +43,7 @@ export default function CardCategory({
   );
 }
 
-/** Loading placeholder with the same box model as CardCategory. */
+// --- Skeleton ---
 export function CardCategorySkeleton({ className }: { className?: string }) {
   return (
     <div
@@ -55,7 +55,7 @@ export function CardCategorySkeleton({ className }: { className?: string }) {
         className
       )}
     >
-      {/* Icon box: the real card's `size-11.2`/`p-1.4` generate no CSS on mobile, so it is 52px there (the PNG's own size). */}
+      {/* Icon */}
       <div className='w-full flex items-center justify-center shrink-0 md:p-[clamp(5.6px,calc(4.69px+0.119vw),6.4px)]'>
         <Skeleton className='size-13 md:size-[clamp(44.8px,calc(37.49px+0.952vw),51.2px)] rounded-lg' />
       </div>

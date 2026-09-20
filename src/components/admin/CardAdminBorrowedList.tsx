@@ -17,6 +17,7 @@ interface CardAdminBorrowedListProps {
   className?: string;
 }
 
+// --- Status styles ---
 const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
   Active: { bg: 'bg-success/5', text: 'text-success' },
   Returned: { bg: 'bg-success/5', text: 'text-success' },
@@ -39,6 +40,7 @@ export default function CardAdminBorrowedList({
 }: CardAdminBorrowedListProps) {
   const statusStyle = STATUS_STYLE[displayStatus] ?? STATUS_STYLE.Active;
 
+  // --- Book info ---
   const bookInfo = (
     <div className="flex flex-col gap-xs w-49">
       <span className="inline-flex self-start border border-neutral-300 rounded-sm px-md text-sm font-bold text-neutral-950 tracking-t-2">
@@ -54,6 +56,7 @@ export default function CardAdminBorrowedList({
     </div>
   );
 
+  // --- Borrower info ---
   const borrowerInfo = (
     <>
       <div className="flex flex-col">
@@ -70,6 +73,7 @@ export default function CardAdminBorrowedList({
 
   return (
     <div className={cn('bg-white rounded-2xl shadow-card flex flex-col gap-xl md:gap-2xl p-xl md:p-2xl w-full', className)}>
+      {/* Status row */}
       <div className="flex items-start justify-between w-full flex-wrap gap-xs">
         <div className="flex items-center gap-lg">
           <span className="font-bold text-neutral-950 tracking-t-2 text-sm md:text-md">Status</span>
@@ -87,7 +91,7 @@ export default function CardAdminBorrowedList({
 
       <div className="h-px w-full bg-neutral-300" />
 
-      {/* Mobile: stacked */}
+      {/* Mobile */}
       <div className="flex flex-col gap-lg w-full md:hidden">
         <img src={optimizeImageUrl(cover, 200)} alt={title} loading="lazy" className="w-23 h-34.5 object-cover shrink-0" />
         {bookInfo}
@@ -95,7 +99,7 @@ export default function CardAdminBorrowedList({
         <div className="flex flex-col gap-md">{borrowerInfo}</div>
       </div>
 
-      {/* Desktop: side by side */}
+      {/* Desktop */}
       <div className="hidden md:flex items-center justify-center w-full">
         <div className="flex flex-1 gap-xl items-center min-w-0">
           <img src={optimizeImageUrl(cover, 200)} alt={title} loading="lazy" className="w-23 h-34.5 object-cover shrink-0" />

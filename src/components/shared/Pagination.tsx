@@ -14,6 +14,7 @@ interface PaginationProps {
 
 type PageItem = number | 'ellipsis';
 
+// --- Helpers ---
 function getVisiblePages(page: number, totalPages: number): PageItem[] {
   if (totalPages <= FRONT_WINDOW_SIZE + 1) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -29,6 +30,7 @@ function getVisiblePages(page: number, totalPages: number): PageItem[] {
   return [...front, 'ellipsis', totalPages];
 }
 
+// --- Page input ---
 function PageInput({
   totalPages,
   onSubmit,
@@ -73,6 +75,7 @@ function PageInput({
   );
 }
 
+// --- Pagination ---
 export default function Pagination({ page, totalPages, onPageChange, className }: PaginationProps) {
   const [isEditingMobile, setIsEditingMobile] = useState(false);
   const [isEditingEllipsis, setIsEditingEllipsis] = useState(false);
@@ -83,6 +86,7 @@ export default function Pagination({ page, totalPages, onPageChange, className }
 
   return (
     <div className={cn('flex items-center gap-xl w-full', className)}>
+      {/* Previous */}
       <button
         type='button'
         disabled={page <= 1}
@@ -156,6 +160,7 @@ export default function Pagination({ page, totalPages, onPageChange, className }
         )}
       </div>
 
+      {/* Next */}
       <button
         type='button'
         disabled={page >= totalPages}

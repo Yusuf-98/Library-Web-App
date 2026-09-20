@@ -1,6 +1,7 @@
 import api from '@/lib/axios';
 import type { Book, PaginatedBooks } from '@/types';
 
+// --- Public ---
 export interface BooksParams {
   q?: string;
   categoryId?: number;
@@ -19,6 +20,7 @@ export const getBookById = (id: number) =>
 export const getBooksByCategory = (categoryId: number, params?: Omit<BooksParams, 'categoryId'>) =>
   getBooks({ ...params, categoryId });
 
+// --- Admin ---
 export interface AdminBooksParams {
   q?: string;
   status?: 'all' | 'available' | 'borrowed' | 'returned';
@@ -29,6 +31,7 @@ export interface AdminBooksParams {
 export const getAdminBooks = (params?: AdminBooksParams) =>
   api.get<PaginatedBooks>('/admin/books', { params }).then((r) => r.data);
 
+// --- Create and update ---
 export interface BookPayload {
   title: string;
   isbn: string;
@@ -57,10 +60,6 @@ export const createBook = (payload: BookPayload) =>
     .then((r) => r.data);
 
 export const updateBook = (id: number, payload: Partial<BookPayload>) => {
-  // Multipart form fields arrive at the backend as strings, and the update
-  // endpoint doesn't coerce numeric fields (e.g. publishedYear), causing a
-  // 500. Only use multipart when actually uploading a new cover file; send
-  // plain JSON (real number types preserved) otherwise.
   if (payload.coverImage instanceof File) {
     return api
       .put<Book>(`/books/${id}`, toBookFormData(payload), { headers: { 'Content-Type': 'multipart/form-data' } })

@@ -6,6 +6,7 @@ import { getErrorMessage } from '@/lib/utils';
 import { useAppDispatch } from '@/app/hooks';
 import { updateUser } from '@/features/auth/authSlice';
 
+// --- Queries ---
 export function useMyProfile() {
   return useQuery({
     queryKey: queryKeys.me.all,
@@ -13,6 +14,7 @@ export function useMyProfile() {
   });
 }
 
+// --- Mutations ---
 interface UpdateProfilePayload {
   name: string;
   phone: string;
