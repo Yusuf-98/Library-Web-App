@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import AdminTabs, { type AdminTab } from '@/components/admin/AdminTabs';
+import AdminTabs, { AdminTabPanel, type AdminTab } from '@/components/admin/AdminTabs';
 import { FadeIn } from '@/components/common/StaggeredItems';
 
 const ACTIVE_TAB_BY_PATH: Record<string, AdminTab> = {
@@ -19,7 +19,9 @@ export default function AdminSectionLayout() {
         <AdminTabs active={active} />
       </FadeIn>
 
-      <Outlet />
+      <AdminTabPanel active={active}>
+        <Outlet />
+      </AdminTabPanel>
     </main>
   );
 }

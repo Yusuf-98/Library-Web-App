@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import AccountTabs, { type AccountTab } from '@/components/user/AccountTabs';
+import AccountTabs, { AccountTabPanel, type AccountTab } from '@/components/user/AccountTabs';
 import Footer from '@/components/shared/Footer';
 import { FadeIn } from '@/components/common/StaggeredItems';
 import { cn } from '@/lib/utils';
@@ -29,7 +29,9 @@ export default function AccountSectionLayout() {
             <AccountTabs active={active} />
           </FadeIn>
 
-          <Outlet />
+          <AccountTabPanel active={active}>
+            <Outlet />
+          </AccountTabPanel>
         </div>
       </main>
 
