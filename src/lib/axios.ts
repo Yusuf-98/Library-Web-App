@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { store } from '@/app/store';
 import { logout } from '@/features/auth/authSlice';
+import { ApiError } from '@/lib/apiError';
 
 interface ApiEnvelope<T> {
   success: boolean;
@@ -37,7 +38,7 @@ api.interceptors.response.use(
       }
     }
     const message = error.response?.data?.message;
-    return Promise.reject(message ? new Error(message) : error);
+    return Promise.reject(message ? new ApiError(message, error.response.status) : error);
   },
 );
 
