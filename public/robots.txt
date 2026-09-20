@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /loans
+Disallow: /profile
+Disallow: /reviews
+
+Sitemap: https://library-web-by-yusuf.vercel.app/sitemap.xml
