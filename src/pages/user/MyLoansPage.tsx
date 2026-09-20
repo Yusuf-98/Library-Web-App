@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import GiveReviewModal from '@/components/user/GiveReviewModal';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { getMyLoans, type LoansParams } from '@/lib/api/loans';
 import { queryKeys } from '@/lib/queryKeys';
 import LoansFilterBar from '@/components/sections/my-loans/LoansFilterBar';
@@ -11,6 +12,7 @@ export default function MyLoansPage() {
   const [status, setStatus] =
     useState<NonNullable<LoansParams['status']>>('all');
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebouncedValue(query);
   const [reviewBookId, setReviewBookId] = useState<number | null>(null);
 
   const {
@@ -21,9 +23,9 @@ export default function MyLoansPage() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: queryKeys.loans.my(status, query),
+    queryKey: queryKeys.loans.my(status, debouncedQuery),
     queryFn: ({ pageParam }) =>
-      getMyLoans({ status, q: query || undefined, page: pageParam, limit: 10 }),
+      getMyLoans({ status, q: debouncedQuery || undefined, page: pageParam, limit: 10 }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.pagination.page < lastPage.pagination.totalPages

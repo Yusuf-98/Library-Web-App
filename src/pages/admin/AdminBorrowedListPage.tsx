@@ -6,6 +6,7 @@ import AdminSearchInput from '@/components/admin/AdminSearchInput';
 import AdminStatusFilters from '@/components/admin/AdminStatusFilters';
 import AdminPaginationFooter from '@/components/admin/AdminPaginationFooter';
 import { FadeInUp, FadeIn } from '@/components/common/StaggeredItems';
+import { usePagedSearch } from '@/hooks/usePagedSearch';
 import { getAdminLoans, updateAdminLoan, type AdminLoansParams } from '@/lib/api/loans';
 import { queryKeys } from '@/lib/queryKeys';
 import { getErrorMessage } from '@/lib/utils';
@@ -29,12 +30,11 @@ export default function AdminBorrowedListPage() {
   const queryClient = useQueryClient();
 
   const [status, setStatus] = useState<NonNullable<AdminLoansParams['status']>>('all');
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const { query, setQuery, debouncedQuery, page, setPage } = usePagedSearch();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: queryKeys.admin.loans.list(status, query, page),
-    queryFn: () => getAdminLoans({ status, q: query || undefined, page, limit: 10 }),
+    queryKey: queryKeys.admin.loans.list(status, debouncedQuery, page),
+    queryFn: () => getAdminLoans({ status, q: debouncedQuery || undefined, page, limit: 10 }),
   });
 
   const { mutate: markReturned } = useMutation({
@@ -64,10 +64,7 @@ export default function AdminBorrowedListPage() {
         <FadeIn delay={100}>
           <AdminSearchInput
             value={query}
-            onChange={(v) => {
-              setQuery(v);
-              setPage(1);
-            }}
+            onChange={setQuery}
             placeholder="Search"
           />
         </FadeIn>

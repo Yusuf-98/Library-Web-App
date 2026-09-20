@@ -1,22 +1,21 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Pagination from '@/components/shared/Pagination';
 import AdminSearchInput from '@/components/admin/AdminSearchInput';
 import { FadeInUp, FadeIn } from '@/components/common/StaggeredItems';
 import { formatShortDateTime } from '@/lib/utils';
+import { usePagedSearch } from '@/hooks/usePagedSearch';
 import { getAdminUsers } from '@/lib/api/users';
 import { queryKeys } from '@/lib/queryKeys';
 
 const COLUMNS = ['No', 'Name', 'Nomor Handphone', 'Email', 'Created at'];
 
 export default function AdminUserListPage() {
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const { query, setQuery, debouncedQuery, page, setPage } = usePagedSearch();
   const limit = 10;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: queryKeys.admin.users(query, page),
-    queryFn: () => getAdminUsers({ q: query || undefined, page, limit }),
+    queryKey: queryKeys.admin.users(debouncedQuery, page),
+    queryFn: () => getAdminUsers({ q: debouncedQuery || undefined, page, limit }),
   });
 
   const users = data?.users ?? [];
@@ -40,10 +39,7 @@ export default function AdminUserListPage() {
         <FadeIn delay={100}>
           <AdminSearchInput
             value={query}
-            onChange={(v) => {
-              setQuery(v);
-              setPage(1);
-            }}
+            onChange={setQuery}
             placeholder='Search user'
           />
         </FadeIn>

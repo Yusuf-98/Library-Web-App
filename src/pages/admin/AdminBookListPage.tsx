@@ -19,6 +19,7 @@ import {
   deleteBook,
   type AdminBooksParams,
 } from '@/lib/api/books';
+import { usePagedSearch } from '@/hooks/usePagedSearch';
 import { queryKeys } from '@/lib/queryKeys';
 import { getErrorMessage } from '@/lib/utils';
 import starIcon from '@/assets/icons/star-24.svg';
@@ -40,14 +41,13 @@ export default function AdminBookListPage() {
 
   const [status, setStatus] =
     useState<NonNullable<AdminBooksParams['status']>>('all');
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const { query, setQuery, debouncedQuery, page, setPage } = usePagedSearch();
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: queryKeys.admin.books.list(status, query, page),
+    queryKey: queryKeys.admin.books.list(status, debouncedQuery, page),
     queryFn: () =>
-      getAdminBooks({ status, q: query || undefined, page, limit: 10 }),
+      getAdminBooks({ status, q: debouncedQuery || undefined, page, limit: 10 }),
   });
 
   const { mutate: confirmDelete, isPending: isDeleting } = useMutation({
@@ -92,10 +92,7 @@ export default function AdminBookListPage() {
           <FadeIn delay={200}>
             <AdminSearchInput
               value={query}
-              onChange={(v) => {
-                setQuery(v);
-                setPage(1);
-              }}
+              onChange={setQuery}
               placeholder='Search book'
             />
           </FadeIn>

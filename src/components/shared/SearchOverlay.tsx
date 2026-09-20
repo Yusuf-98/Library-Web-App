@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { closeSearch, setSearchQuery } from '@/features/ui/uiSlice';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useOverlayA11y } from '@/hooks/useOverlayA11y';
 import { getBooks } from '@/lib/api/books';
 import { queryKeys } from '@/lib/queryKeys';
@@ -24,15 +25,20 @@ export default function SearchOverlay() {
   const close = useCallback(() => dispatch(closeSearch()), [dispatch]);
   useOverlayA11y(visible, close, inputRef);
 
+  // Search only once typing pauses, instead of on every keystroke.
+  const debouncedQuery = useDebouncedValue(searchQuery);
   const { data, isLoading, isError } = useQuery({
-    queryKey: queryKeys.books.search(searchQuery),
-    queryFn: () => getBooks({ q: searchQuery }),
-    enabled: searchQuery.trim().length > 0,
+    queryKey: queryKeys.books.search(debouncedQuery),
+    queryFn: () => getBooks({ q: debouncedQuery }),
+    enabled: debouncedQuery.trim().length > 0,
   });
 
   if (!visible) return null;
 
-  const books = data?.books ?? [];
+  const hasQuery = searchQuery.trim().length > 0;
+  const isSettled = searchQuery === debouncedQuery;
+  const books = hasQuery ? (data?.books ?? []) : [];
+  const isSearching = hasQuery && (!isSettled || isLoading);
 
   return (
     <div
@@ -62,13 +68,13 @@ export default function SearchOverlay() {
 
       {/* Results */}
       <main aria-live="polite" className="custom-container py-6 md:py-[clamp(16px,calc(-20.57px+4.762vw),48px)]">
-        {searchQuery.trim().length === 0 && (
+        {!hasQuery && (
           <p className="text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10">
             Type to search for books
           </p>
         )}
 
-        {isLoading && (
+        {isSearching && books.length === 0 && (
           <div className="flex justify-center mt-10">
             <span className="size-8 border-2 border-primary-300/30 border-t-primary-300 rounded-full animate-spin" />
           </div>
@@ -80,7 +86,7 @@ export default function SearchOverlay() {
           </p>
         )}
 
-        {!isLoading && !isError && searchQuery.trim().length > 0 && books.length === 0 && (
+        {hasQuery && !isSearching && !isError && books.length === 0 && (
           <p className="text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10">
             No books found for "{searchQuery}"
           </p>

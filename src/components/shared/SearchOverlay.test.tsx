@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, useLocation } from 'react-router-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import authReducer from '@/features/auth/authSlice';
 import uiReducer from '@/features/ui/uiSlice';
 import { getBooks } from '@/lib/api/books';
@@ -118,5 +118,36 @@ describe('SearchOverlay', () => {
     await user.click(screen.getByRole('button', { name: 'Close search' }));
     expect(store.getState().ui.isSearchOpen).toBe(false);
     expect(overlay()).not.toBeInTheDocument();
+  });
+
+  describe('debounce', () => {
+    beforeEach(() => vi.useFakeTimers({ shouldAdvanceTime: true }));
+    afterEach(() => vi.useRealTimers());
+
+    const typeQuery = async (text: string) => {
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      await user.type(screen.getByRole('textbox', { name: 'Search book' }), text);
+    };
+
+    it('searches once typing pauses, not on every keystroke', async () => {
+      renderOverlay({ isSearchOpen: true, searchQuery: '' });
+
+      await typeQuery('harry');
+      expect(getBooks).not.toHaveBeenCalled();
+
+      await act(() => vi.advanceTimersByTimeAsync(300));
+      await waitFor(() => expect(getBooks).toHaveBeenCalledTimes(1));
+      expect(getBooks).toHaveBeenCalledWith({ q: 'harry' });
+      expect(await screen.findByRole('button', { name: /Test Book 1/ })).toBeInTheDocument();
+    });
+
+    it('shows a spinner instead of "No books found" while the search is pending', async () => {
+      renderOverlay({ isSearchOpen: true, searchQuery: '' });
+
+      await typeQuery('zzz');
+
+      expect(screen.queryByText(/No books found/)).not.toBeInTheDocument();
+      expect(document.querySelector('.animate-spin')).toBeInTheDocument();
+    });
   });
 });
