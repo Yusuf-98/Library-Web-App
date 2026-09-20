@@ -43,6 +43,11 @@ export interface PaginatedBooks {
   pagination: Pagination;
 }
 
+export interface AuthorBooksResponse extends PaginatedBooks {
+  author: BookAuthor;
+  bookCount: number;
+}
+
 // ===== Category =====
 
 export interface Category {

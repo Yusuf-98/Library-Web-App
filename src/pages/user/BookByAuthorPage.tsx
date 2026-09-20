@@ -19,16 +19,15 @@ export default function BookByAuthorPage() {
   });
 
   const books = data?.books ?? [];
-  const authorName = books[0]?.author.name ?? 'Author';
 
   return (
     <>
       {/* Content */}
       <main className='custom-container flex-1 flex flex-col gap-[clamp(16px,calc(-11.43px+3.571vw),40px)] mb-7'>
         {/* Author info */}
-        {!isLoading && books.length > 0 && (
+        {!isLoading && data && books.length > 0 && (
           <FadeInUp>
-            <CardAuthor name={authorName} bookCount={books.length} />
+            <CardAuthor name={data.author.name} bookCount={data.bookCount} />
           </FadeInUp>
         )}
 
