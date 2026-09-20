@@ -8,6 +8,8 @@ interface CoverImageSectionProps {
   fileInputRef: RefObject<HTMLInputElement | null>;
   onCoverChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDeleteImage: () => void;
+  // Only a newly picked file can be discarded; the API has no way to remove a saved cover.
+  canDelete: boolean;
 }
 
 export default function CoverImageSection({
@@ -15,6 +17,7 @@ export default function CoverImageSection({
   fileInputRef,
   onCoverChange,
   onDeleteImage,
+  canDelete,
 }: CoverImageSectionProps) {
   return (
     <div className='flex flex-col gap-0.5 w-full'>
@@ -39,16 +42,18 @@ export default function CoverImageSection({
                 Change Image
               </span>
             </button>
-            <button
-              type='button'
-              onClick={onDeleteImage}
-              className='cursor-pointer bg-neutral-25 border border-neutral-300 rounded-lg flex gap-1.5 items-center h-10 px-lg'
-            >
-              <img src={trashRedIcon} alt='' className='size-5' />
-              <span className='font-medium text-accent-red text-sm tracking-t-3'>
-                Delete Image
-              </span>
-            </button>
+            {canDelete && (
+              <button
+                type='button'
+                onClick={onDeleteImage}
+                className='cursor-pointer bg-neutral-25 border border-neutral-300 rounded-lg flex gap-1.5 items-center h-10 px-lg'
+              >
+                <img src={trashRedIcon} alt='' className='size-5' />
+                <span className='font-medium text-accent-red text-sm tracking-t-3'>
+                  Delete Image
+                </span>
+              </button>
+            )}
           </div>
           <span className='font-medium text-neutral-950 text-sm tracking-t-3 text-center'>
             PNG or JPG (max. 5mb)

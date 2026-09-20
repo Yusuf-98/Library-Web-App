@@ -44,7 +44,6 @@ export default function AdminBookFormPage() {
   const [description, setDescription] = useState('');
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
-  const [existingCoverRemoved, setExistingCoverRemoved] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [seededBookId, setSeededBookId] = useState<number | null>(null);
@@ -66,17 +65,14 @@ export default function AdminBookFormPage() {
     if (!file) return;
     setCoverFile(file);
     setCoverPreview(URL.createObjectURL(file));
-    setExistingCoverRemoved(false);
   };
 
   const handleDeleteImage = () => {
     setCoverFile(null);
     setCoverPreview(null);
-    setExistingCoverRemoved(true);
   };
 
-  const currentCoverSrc =
-    coverPreview ?? (existingCoverRemoved ? null : existingBook?.coverImage);
+  const currentCoverSrc = coverPreview ?? existingBook?.coverImage;
 
   const { mutate: submit, isPending } = useMutation({
     mutationFn: () => {
@@ -225,6 +221,7 @@ export default function AdminBookFormPage() {
             fileInputRef={fileInputRef}
             onCoverChange={handleCoverChange}
             onDeleteImage={handleDeleteImage}
+            canDelete={!!coverPreview}
           />
 
           {/* Submit button */}
