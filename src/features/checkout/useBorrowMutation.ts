@@ -10,7 +10,7 @@ import type {
 } from '@/types';
 import { borrowFromCart } from '@/lib/api/cart';
 import { queryKeys } from '@/lib/queryKeys';
-import { getErrorMessage } from '@/lib/utils';
+import { addDaysISO, getErrorMessage } from '@/lib/utils';
 
 interface BorrowVariables {
   days: 3 | 5 | 10;
@@ -20,12 +20,6 @@ interface BorrowVariables {
 interface BorrowMutationContext {
   previousCartQueries: [readonly unknown[], unknown][];
   previousBookQueries: (readonly [readonly unknown[], Book | undefined])[];
-}
-
-function computeReturnDate(borrowDate: string, days: number) {
-  const d = new Date(borrowDate);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
 }
 
 export function useBorrowMutation(items: CartItem[]) {
@@ -120,7 +114,7 @@ export function useBorrowMutation(items: CartItem[]) {
       navigate('/checkout/success', {
         state: {
           itemCount: result.loans.length,
-          returnDate: computeReturnDate(variables.borrowDate, variables.days),
+          returnDate: addDaysISO(variables.borrowDate, variables.days),
         },
       });
     },

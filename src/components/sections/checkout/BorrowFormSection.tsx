@@ -1,17 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import type { CartItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import DatePicker from '@/components/ui/date-picker';
-import { cn, formatLongDate } from '@/lib/utils';
+import { addDaysISO, cn, formatLongDate, todayLocalISO } from '@/lib/utils';
 import { useBorrowMutation } from '@/features/checkout/useBorrowMutation';
 import checkIcon from '@/assets/icons/check.svg';
 
 const DURATIONS: (3 | 5 | 10)[] = [3, 5, 10];
-
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
 
 function Radio({ checked }: { checked: boolean }) {
   return (
@@ -31,16 +27,12 @@ interface BorrowFormSectionProps {
 }
 
 export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
-  const [borrowDate, setBorrowDate] = useState(todayISO());
+  const [borrowDate, setBorrowDate] = useState(todayLocalISO());
   const [days, setDays] = useState<3 | 5 | 10>(3);
   const [agreeReturn, setAgreeReturn] = useState(false);
   const [agreePolicy, setAgreePolicy] = useState(false);
 
-  const returnDate = useMemo(() => {
-    const d = new Date(borrowDate);
-    d.setDate(d.getDate() + days);
-    return d.toISOString().slice(0, 10);
-  }, [borrowDate, days]);
+  const returnDate = addDaysISO(borrowDate, days);
 
   const { mutate: confirmBorrow, isPending } = useBorrowMutation(items);
 
@@ -73,7 +65,7 @@ export default function BorrowFormSection({ items }: BorrowFormSectionProps) {
         <DatePicker
           id='borrow-date'
           value={borrowDate}
-          min={todayISO()}
+          min={todayLocalISO()}
           onChange={setBorrowDate}
         />
       </div>
