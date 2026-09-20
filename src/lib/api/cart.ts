@@ -9,8 +9,6 @@ export const addCartItem = (bookId: number) =>
 export const removeCartItem = (itemId: number) =>
   api.delete(`/cart/items/${itemId}`).then((r) => r.data);
 
-export const clearCart = () => api.delete('/cart').then((r) => r.data);
-
 export const getCheckout = () => api.get<CheckoutResponse>('/cart/checkout').then((r) => r.data);
 
 export const borrowFromCart = (itemIds: number[], days: 3 | 5 | 10 = 3, borrowDate?: string) =>

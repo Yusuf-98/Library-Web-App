@@ -14,9 +14,6 @@ export const getMyLoans = (params?: LoansParams) =>
 export const borrowBook = (bookId: number, days: number) =>
   api.post<Loan>('/loans', { bookId, days }).then((r) => r.data);
 
-export const returnBook = (loanId: number) =>
-  api.patch<Loan>(`/loans/${loanId}/return`).then((r) => r.data);
-
 export interface AdminLoansParams {
   status?: 'all' | 'active' | 'returned' | 'overdue';
   q?: string;
