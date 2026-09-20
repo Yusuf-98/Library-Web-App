@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import CardAuthor from '@/components/common/CardAuthor';
+import CardAuthor, { CardAuthorSkeleton } from '@/components/common/CardAuthor';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { getPopularAuthors } from '@/lib/api/authors';
 import { queryKeys } from '@/lib/queryKeys';
-import { SectionLoading, SectionError } from './SectionState';
+import { SectionError } from './SectionState';
 
 export default function PopularAuthorsSection() {
   const navigate = useNavigate();
@@ -27,7 +27,17 @@ export default function PopularAuthorsSection() {
         </h2>
       </FadeInUp>
 
-      {authorsLoading && <SectionLoading />}
+      {authorsLoading && (
+        <div
+          role='status'
+          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2xl'
+        >
+          <span className='sr-only'>Loading authors</span>
+          {Array.from({ length: 10 }, (_, i) => (
+            <CardAuthorSkeleton key={i} />
+          ))}
+        </div>
+      )}
       {authorsError && <SectionError message='Failed to load authors.' />}
 
       {/* Author grid */}

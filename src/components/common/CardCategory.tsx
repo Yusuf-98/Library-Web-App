@@ -1,3 +1,4 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 interface CardCategoryProps {
@@ -39,5 +40,28 @@ export default function CardCategory({
         {name}
       </p>
     </button>
+  );
+}
+
+/** Loading placeholder with the same box model as CardCategory. */
+export function CardCategorySkeleton({ className }: { className?: string }) {
+  return (
+    <div
+      aria-hidden='true'
+      className={cn(
+        'bg-white rounded-2xl shadow-card',
+        'w-full flex-1 min-w-0 flex flex-col items-start justify-center gap-lg',
+        'p-md md:p-[clamp(8px,calc(3.43px+0.595vw),12px)]',
+        className
+      )}
+    >
+      {/* Icon box: the real card's `size-11.2`/`p-1.4` generate no CSS on mobile, so it is 52px there (the PNG's own size). */}
+      <div className='w-full flex items-center justify-center shrink-0 md:p-[clamp(5.6px,calc(4.69px+0.119vw),6.4px)]'>
+        <Skeleton className='size-13 md:size-[clamp(44.8px,calc(37.49px+0.952vw),51.2px)] rounded-lg' />
+      </div>
+      <div className='w-full text-xs md:text-[clamp(12px,calc(7.43px+0.595vw),16px)]'>
+        <Skeleton className='w-2/3'>&nbsp;</Skeleton>
+      </div>
+    </div>
   );
 }

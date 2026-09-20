@@ -1,5 +1,6 @@
 import BookIcon from '@/assets/icons/book.svg';
 import authorImage from '@/assets/images/author-image.png';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 interface CardAuthorProps {
@@ -49,5 +50,32 @@ export default function CardAuthor({
         </div>
       </div>
     </button>
+  );
+}
+
+/** Loading placeholder with the same box model as CardAuthor. */
+export function CardAuthorSkeleton({ className }: { className?: string }) {
+  return (
+    <div
+      aria-hidden='true'
+      className={cn(
+        'bg-white rounded-xl shadow-card flex items-center w-full',
+        'p-lg gap-lg md:p-[clamp(12px,calc(7.43px+0.595vw),16px)] md:gap-[clamp(12px,calc(7.43px+0.595vw),16px)]',
+        className
+      )}
+    >
+      <Skeleton className='rounded-full shrink-0 size-15 md:size-[clamp(60px,calc(36px+3.125vw),81px)]' />
+      <div className='flex flex-col gap-0.5 min-w-0'>
+        <div className='w-32 text-md md:text-[clamp(16px,calc(13.71px+0.298vw),18px)]'>
+          <Skeleton>&nbsp;</Skeleton>
+        </div>
+        <div className='flex items-center gap-1.5'>
+          <span className='size-6 shrink-0' />
+          <div className='w-16 text-sm md:text-[clamp(14px,calc(11.71px+0.298vw),16px)]'>
+            <Skeleton>&nbsp;</Skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

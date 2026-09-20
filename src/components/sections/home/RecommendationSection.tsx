@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import CardBook from '@/components/common/CardBook';
+import CardBook, { CardBookSkeleton } from '@/components/common/CardBook';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { Button } from '@/components/ui/button';
 import { getBooks } from '@/lib/api/books';
 import { queryKeys } from '@/lib/queryKeys';
-import { SectionLoading, SectionError } from './SectionState';
+import { SectionError } from './SectionState';
 
 export default function RecommendationSection() {
   const navigate = useNavigate();
@@ -38,7 +38,17 @@ export default function RecommendationSection() {
         </h2>
       </FadeInUp>
 
-      {booksLoading && <SectionLoading />}
+      {booksLoading && (
+        <div
+          role='status'
+          className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2xl'
+        >
+          <span className='sr-only'>Loading books</span>
+          {Array.from({ length: 10 }, (_, i) => (
+            <CardBookSkeleton key={i} className='w-full' />
+          ))}
+        </div>
+      )}
       {booksError && <SectionError message='Failed to load books.' />}
 
       {!booksLoading && !booksError && books.length === 0 && (

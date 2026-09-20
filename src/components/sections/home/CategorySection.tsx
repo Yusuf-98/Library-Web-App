@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import CardCategory from '@/components/common/CardCategory';
+import CardCategory, { CardCategorySkeleton } from '@/components/common/CardCategory';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { getCategories } from '@/lib/api/categories';
 import { getCategoryIcon, HOME_CATEGORY_ORDER } from '@/lib/categoryIcons';
 import { queryKeys } from '@/lib/queryKeys';
 import { cn } from '@/lib/utils';
-import { SectionLoading, SectionError } from './SectionState';
+import { SectionError } from './SectionState';
 
 const CATEGORY_WINDOW = 6;
 const CATEGORY_WINDOW_STARTS = [0, 1, 3];
@@ -51,33 +51,54 @@ export default function CategorySection() {
 
   return (
     <>
-      {/* Pagination dots */}
-      {!categoriesLoading &&
-        !categoriesError &&
-        orderedCategories.length > CATEGORY_WINDOW && (
+      {/* Pagination dots (the row is reserved while loading so the categories don't jump down) */}
+      {(categoriesLoading ||
+        (!categoriesError && orderedCategories.length > CATEGORY_WINDOW)) && (
           <FadeInUp>
-            <div className='flex items-center justify-center gap-1 md:gap-2 -mt-1 md:-mt-7.5 mb-2.5 md:mb-0'>
-              {CATEGORY_WINDOW_STARTS.map((_, i) => (
-                <button
-                  key={i}
-                  type='button'
-                  aria-label={`Category page ${i + 1}`}
-                  onClick={() => setCategoryPage(i)}
-                  className={cn(
-                    'cursor-pointer h-1.5 md:h-2 rounded-full transition-all',
-                    i === categoryPage
-                      ? 'w-6 bg-primary-300'
-                      : 'w-1.5 md:w-2 bg-neutral-300'
-                  )}
-                />
-              ))}
+            <div className='flex items-center justify-center -mt-1 md:-mt-7.5 mb-2.5 md:mb-0'>
+              {CATEGORY_WINDOW_STARTS.map((_, i) =>
+                categoriesLoading ? (
+                  <span
+                    key={i}
+                    aria-hidden='true'
+                    className='size-6 -my-[9px] md:-my-2'
+                  />
+                ) : (
+                  // 24px hit area around a small dot; the negative margin keeps the row as tall as the dots.
+                  <button
+                    key={i}
+                    type='button'
+                    aria-label={`Category page ${i + 1}`}
+                    onClick={() => setCategoryPage(i)}
+                    className='cursor-pointer flex size-6 items-center justify-center -my-[9px] md:-my-2'
+                  >
+                    <span
+                      className={cn(
+                        'block h-1.5 md:h-2 rounded-full transition-all',
+                        i === categoryPage
+                          ? 'w-6 bg-primary-300'
+                          : 'w-1.5 md:w-2 bg-neutral-300'
+                      )}
+                    />
+                  </button>
+                )
+              )}
             </div>
           </FadeInUp>
         )}
 
       {/* Category */}
       <section className='flex flex-col gap-lg'>
-        {categoriesLoading && <SectionLoading />}
+        {categoriesLoading && (
+          <div role='status' className='grid grid-cols-3 gap-lg md:flex md:gap-xl'>
+            <span className='sr-only'>Loading categories</span>
+            {Array.from({ length: CATEGORY_WINDOW }, (_, i) => (
+              <div key={i} className='flex-1 min-w-0'>
+                <CardCategorySkeleton />
+              </div>
+            ))}
+          </div>
+        )}
         {categoriesError && (
           <SectionError message='Failed to load categories.' />
         )}
