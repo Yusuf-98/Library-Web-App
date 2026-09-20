@@ -6,17 +6,21 @@ import CardAuthor from '@/components/common/CardAuthor';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { getBooksByAuthor } from '@/lib/api/authors';
 import { queryKeys } from '@/lib/queryKeys';
+import { isNotFoundError } from '@/lib/apiError';
+import NotFoundState from '@/components/common/NotFoundState';
 
 export default function BookByAuthorPage() {
   const { id } = useParams<{ id: string }>();
   const authorId = Number(id);
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: queryKeys.books.author(authorId),
     queryFn: () => getBooksByAuthor(authorId),
     enabled: !!authorId,
   });
+  // A non-numeric id (/author/abc) is never fetched, so it is also "not found".
+  const notFound = !authorId || isNotFoundError(error);
 
   const books = data?.books ?? [];
 
@@ -45,14 +49,15 @@ export default function BookByAuthorPage() {
             </div>
           )}
           {/* Error state */}
-          {isError && (
+          {notFound && <NotFoundState message='Author not found.' />}
+          {isError && !notFound && (
             <p className='text-sm text-accent-red text-center mt-10 tracking-t-2'>
               Failed to load books.
             </p>
           )}
 
           {/* Empty state */}
-          {!isLoading && books.length === 0 && !isError && (
+          {!isLoading && books.length === 0 && !isError && !notFound && (
             <p className='text-sm font-medium text-neutral-500 tracking-t-2 text-center mt-10'>
               No books found for this author.
             </p>

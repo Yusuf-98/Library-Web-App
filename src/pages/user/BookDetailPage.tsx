@@ -4,6 +4,8 @@ import { useAppSelector } from '@/app/hooks';
 import { getCart } from '@/lib/api/cart';
 import { getBookById } from '@/lib/api/books';
 import { queryKeys } from '@/lib/queryKeys';
+import { isNotFoundError } from '@/lib/apiError';
+import NotFoundState from '@/components/common/NotFoundState';
 import Footer from '@/components/shared/Footer';
 import CoverInfoSection from '@/components/sections/book-detail/CoverInfoSection';
 import { FadeInUp } from '@/components/common/StaggeredItems';
@@ -30,11 +32,14 @@ export default function BookDetailPage() {
     data: book,
     isLoading,
     isError,
+    error,
   } = useQuery({
     queryKey: queryKeys.books.detail(bookId),
     queryFn: () => getBookById(bookId),
     enabled: !!bookId,
   });
+  // A non-numeric id (/books/abc) is never fetched, so it is also "not found".
+  const notFound = !bookId || isNotFoundError(error);
 
   return (
     <>
@@ -46,11 +51,15 @@ export default function BookDetailPage() {
       )}
 
       {/* Error state */}
-      {!isLoading && (isError || !book) && (
-        <p className='text-sm text-accent-red text-center mt-10 tracking-t-2'>
-          Failed to load book.
-        </p>
-      )}
+      {!isLoading &&
+        (isError || !book) &&
+        (notFound ? (
+          <NotFoundState message='Book not found. It may have been removed.' />
+        ) : (
+          <p className='text-sm text-accent-red text-center mt-10 tracking-t-2'>
+            Failed to load book.
+          </p>
+        ))}
 
       {!isLoading && book && (
         <>
