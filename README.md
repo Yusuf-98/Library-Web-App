@@ -1,76 +1,115 @@
-# Library Web App
+# Booky — Library Web App
 
-Frontend aplikasi perpustakaan (peminjaman buku online) — dibuat dengan React + TypeScript + Vite. Backend REST API terpisah (Node.js), diakses lewat `VITE_API_URL`.
+A web app for borrowing books online: browse the catalogue, add books to a cart, check out with a borrow date and duration, and track loans and reviews. Admins manage books, users and loan returns from a separate dashboard.
 
-## Fitur
+Built with React, TypeScript and Vite against a separate REST API. The interface is aimed at an Indonesian audience, so a few labels (for example the phone number field) are in Indonesian.
 
-**User**
-- Login / register
-- Browse buku: home, kategori, halaman penulis, pencarian (search overlay)
-- Detail buku, cart, checkout, dan riwayat peminjaman (loans)
-- Review buku: buat, edit, dan hapus review
-- Profile: lihat & update data diri, statistik peminjaman
+**Live demo:** https://library-web-by-yusuf.vercel.app/
 
-**Admin**
-- Kelola buku (CRUD), lihat daftar user, kelola daftar peminjaman (tandai dikembalikan)
+To try the reader flow (cart, checkout, loans, reviews), create an account on the Register page. The admin dashboard needs a privileged account, so it is shown in the screenshots below instead.
 
-Routing membedakan tiga tingkat akses: halaman publik, halaman yang butuh login (`ProtectedRoute`), dan halaman admin (`AdminRoute`) — lihat [src/App.tsx](src/App.tsx).
+<p align="center">
+  <img src="docs/screenshots/home-hero.png" alt="Booky home page with hero banner and book categories" width="820">
+</p>
 
-## Menjalankan Proyek
+## Features
+
+**Readers**
+- Register and log in
+- Browse the catalogue by category, author or search, with category and rating filters
+- Book detail page with stock, rating, reviews and related books
+- Cart and checkout: pick a borrow date and a 3, 5 or 10 day duration; the return date is calculated for you
+- "My Loans" list filtered by status (All, Active, Returned, Overdue)
+- Write, edit and delete reviews; manage your profile
+
+**Admins**
+- Book management: add, edit, preview and delete books with cover upload
+- User list and search
+- Loan list with status filters and a "Mark Returned" action
+
+Access is split into three levels in [src/App.tsx](src/App.tsx): public pages, pages that need a login (`ProtectedRoute`) and admin-only pages (`AdminRoute`).
+
+## Screenshots
+
+| | |
+| --- | --- |
+| ![Home recommendations](docs/screenshots/home-recommendations.png) | ![Book list with filters](docs/screenshots/book-list-filters.png) |
+| **Home** — recommendations with "Load More" | **Book list** — category and rating filters |
+| ![Book detail](docs/screenshots/book-detail.png) | ![Reviews and related books](docs/screenshots/book-reviews-related.png) |
+| **Book detail** — stock, rating, add to cart or borrow | **Reviews and related books** |
+| ![Checkout](docs/screenshots/checkout.png) | ![My loans](docs/screenshots/my-loans.png) |
+| **Checkout** — borrow date, duration and computed return date | **My loans** — filter by status |
+| ![My reviews](docs/screenshots/my-reviews.png) | ![Register](docs/screenshots/register.png) |
+| **My reviews** | **Register** |
+
+### Admin dashboard
+
+| | |
+| --- | --- |
+| ![Admin book list](docs/screenshots/admin-books.png) | ![Admin loan list](docs/screenshots/admin-loans.png) |
+| **Books** — preview, edit, delete | **Loans** — mark as returned |
+
+![Admin user list](docs/screenshots/admin-users.png)
+
+*Personal details of the users in this list are pixelated.*
+
+## Tech stack
+
+- **React 19** + **TypeScript** + **Vite**
+- **TanStack Query** for server state (fetching, caching, mutations)
+- **Redux Toolkit** for auth and UI state
+- **React Router** for routing, with route-level code splitting
+- **Tailwind CSS v4** + **Radix UI** (shadcn/ui) for styling and accessible primitives
+- **Axios** for the API client
+
+## Getting started
+
+Requires Node.js 20.19+ or 22.12+ (Vite 8).
 
 ```bash
 npm install
+cp .env.example .env
 ```
 
-Buat file `.env` di root proyek berisi URL backend:
-
-```
-VITE_API_URL=https://your-backend-host/api
-```
-
-Lalu jalankan dev server:
+Set `VITE_API_URL` in `.env` to the base URL of the backend API, then start the dev server:
 
 ```bash
 npm run dev
 ```
 
-Script yang tersedia:
+The dev server runs on port 5173 and fails fast if that port is taken. Set the `PORT` environment variable to use another one.
 
-| Command | Keterangan |
+| Command | Description |
 | --- | --- |
-| `npm run dev` | Menjalankan dev server (Vite) |
-| `npm run build` | Type-check (`tsc -b`) lalu build production |
-| `npm run lint` | Menjalankan ESLint |
-| `npm run preview` | Preview hasil build production |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Type-check (`tsc -b`) and build for production |
+| `npm run lint` | Run ESLint |
+| `npm run preview` | Preview the production build |
 
-## Struktur Folder
+## Project structure
 
 ```
 src/
-├── app/            # Redux store + typed hooks (useAppDispatch/useAppSelector)
+├── app/            # Redux store and typed hooks
 ├── components/
-│   ├── admin/      # Komponen khusus halaman admin
-│   ├── common/     # Komponen reusable lintas halaman (card, detail, dsb.)
-│   ├── layouts/    # Layout shell (UserLayout, AdminLayout, dst.)
-│   ├── sections/   # Blok komponen spesifik per halaman (home, checkout, book-detail, dst.)
-│   ├── shared/     # Navbar, Footer, ProtectedRoute/AdminRoute, SearchOverlay
-│   └── ui/         # Primitive UI (button, dialog, select, dst. — shadcn-based)
-├── features/       # State & data hook per domain fitur: auth, ui (slice Redux), cart, checkout, profile, reviews (hook query/mutation)
-├── hooks/          # Custom hook generic/UI-only, lintas domain (useImageError, useInView)
+│   ├── admin/      # Admin-only components
+│   ├── common/     # Reusable cards and detail views
+│   ├── layouts/    # Layout shells (user, admin, account)
+│   ├── sections/   # Page-specific blocks (home, checkout, book detail, ...)
+│   ├── shared/     # Navbar, footer, route guards, search overlay
+│   └── ui/         # UI primitives (shadcn/ui on Radix)
+├── features/       # Per-domain state and data hooks: auth, ui, cart, checkout, profile, reviews
+├── hooks/          # Generic hooks (useImageError, useInView)
 ├── lib/
-│   ├── api/        # Semua pemanggilan REST API, dikelompokkan per resource
-│   ├── queryKeys.ts  # Query key TanStack Query yang tersentralisasi
-│   └── ...         # axios instance, utils, category icons, dst.
+│   ├── api/        # REST calls grouped by resource
+│   ├── queryKeys.ts  # Centralised TanStack Query keys
+│   └── ...         # Axios instance, utils, category icons
 ├── pages/
-│   ├── user/       # Halaman untuk pengguna umum
-│   └── admin/      # Halaman untuk admin
-└── types/          # Tipe data bersama (Book, User, Loan, Review, dst.)
+│   ├── user/       # Reader pages
+│   └── admin/      # Admin pages
+└── types/          # Shared types (Book, User, Loan, Review, ...)
 ```
 
-## Stack
+## Deployment
 
-- React 19 + TypeScript + Vite
-- TanStack Query untuk server state (fetching, caching, mutation)
-- Redux Toolkit untuk auth/UI state
-- React Router untuk routing
-- Tailwind CSS + Radix UI (shadcn) untuk styling & komponen UI
+Deployed on Vercel. [vercel.json](vercel.json) rewrites every path to `index.html` so direct links and page refreshes work with client-side routing. Set `VITE_API_URL` in the Vercel project's environment variables.
