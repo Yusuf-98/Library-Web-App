@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { FadeIn } from '@/components/common/StaggeredItems';
 import logoBooky from '@/assets/images/logo-booky.png';
-import johnDoeAvatar from '@/assets/images/john-doe.png';
+import johnDoeAvatar from '@/assets/images/john-doe.webp';
 import searchIcon from '@/assets/icons/search.svg';
 import bagIcon from '@/assets/icons/bag.svg';
 import menuIcon from '@/assets/icons/menu.svg';

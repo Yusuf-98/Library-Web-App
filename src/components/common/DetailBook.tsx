@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
 import type { Book } from '@/types';
+import { optimizeImageUrl } from '@/lib/imageUrl';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -56,7 +57,7 @@ export default function DetailBook({
         {/* Cover image */}
         <div className='bg-neutral-200 p-1.25 md:p-[clamp(5px,calc(1.57px+0.446vw),8px)] shrink-0'>
           <img
-            src={book.coverImage}
+            src={optimizeImageUrl(book.coverImage, 640)}
             alt={book.title}
             className='object-cover aspect-2/3 w-53 md:w-[clamp(212px,calc(87.43px+16.22vw),321px)]'
           />

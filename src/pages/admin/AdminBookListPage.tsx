@@ -20,6 +20,7 @@ import {
   type AdminBooksParams,
 } from '@/lib/api/books';
 import { usePagedSearch } from '@/hooks/usePagedSearch';
+import { optimizeImageUrl } from '@/lib/imageUrl';
 import { queryKeys } from '@/lib/queryKeys';
 import { getErrorMessage } from '@/lib/utils';
 import starIcon from '@/assets/icons/star-24.svg';
@@ -142,7 +143,7 @@ export default function AdminBookListPage() {
             >
               <div className='flex-1 min-w-0 flex gap-lg md:gap-xl items-center'>
                 <img
-                  src={book.coverImage}
+                  src={optimizeImageUrl(book.coverImage, 200)}
                   alt={book.title}
                   loading='lazy'
                   className='w-23 h-34.5 object-cover shrink-0'
