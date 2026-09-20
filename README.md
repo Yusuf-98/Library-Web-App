@@ -115,7 +115,8 @@ Tests live next to the code they cover (`*.test.ts` / `*.test.tsx`) and run with
 - **Search overlay**: results, empty and error states, Escape to close, scroll lock, and closing when a result is opened.
 - **Accessibility**: the tabs (roving tabindex, arrow/Home/End keys, tabpanel wiring), the overlay hook (focus return) and the filter checkboxes.
 - **Forms and search**: the registration rules and the full Register flow (field errors, focus, trimmed values, server errors), and the debounced search hooks (one request once typing pauses; a new search restarts at page 1).
-- **Resilience**: the error boundary fallback and the cover-image controls in the admin book form.
+- **Resilience**: the error boundary fallback, "not found" versus generic error states on the book and author pages, the API client (status-preserving errors, Bearer token, 401 logout) and the retry policy (4xx answers are not retried).
+- **Admin forms**: the cover-image controls in the book form.
 
 GitHub Actions runs lint, type-check, tests and the production build on every push and pull request ([ci.yml](.github/workflows/ci.yml)).
 
@@ -136,7 +137,7 @@ The app talks to a separate REST API (Express, Prisma and PostgreSQL). It publis
 | Profile | `GET /me`, `PATCH /me` |
 | Admin | `GET /admin/books`, `GET /admin/users`, `GET /admin/loans`, `PATCH /admin/loans/:id`, `POST /books`, `PUT /books/:id`, `DELETE /books/:id` |
 
-Reviews are only accepted for books the user has borrowed and returned.
+Reviews are only accepted for books the user has borrowed and returned. There is no update route for reviews: editing one sends `POST /reviews` again for the same book.
 
 ## Project structure
 

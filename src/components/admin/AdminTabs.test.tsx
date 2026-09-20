@@ -22,7 +22,9 @@ function renderTabs(active: 'loans' | 'users' | 'books' = 'users') {
 const tab = (name: string) => screen.getByRole('tab', { name });
 
 describe('AdminTabs', () => {
-  beforeEach(() => navigate.mockClear());
+  beforeEach(() => {
+    navigate.mockClear();
+  });
 
   it('exposes a labelled tablist with the three admin sections', () => {
     renderTabs();

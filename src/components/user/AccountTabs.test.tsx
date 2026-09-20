@@ -22,7 +22,9 @@ function renderTabs(active: 'profile' | 'loans' | 'reviews' = 'loans') {
 const tab = (name: string) => screen.getByRole('tab', { name });
 
 describe('AccountTabs', () => {
-  beforeEach(() => navigate.mockClear());
+  beforeEach(() => {
+    navigate.mockClear();
+  });
 
   it('exposes a labelled tablist with all three tabs', () => {
     renderTabs();
