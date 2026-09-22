@@ -148,6 +148,7 @@ export default function AdminBookFormPage() {
             <button
               type='button'
               onClick={() => navigate('/admin/books')}
+              aria-label='Back to book list'
               className='cursor-pointer shrink-0 size-6 md:size-8 flex items-center justify-center'
             >
               <img src={arrowBackIcon} alt='' className='size-full' />

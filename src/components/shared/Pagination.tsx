@@ -94,7 +94,7 @@ export default function Pagination({ page, totalPages, onPageChange, className }
         className='cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex gap-1.5 items-center font-medium text-neutral-950 tracking-t-3 text-md shrink-0'
       >
         <img src={chevronLeftIcon} alt='' className='size-6' />
-        <span className='hidden md:inline'>Previous</span>
+        <span className='sr-only md:not-sr-only md:inline'>Previous</span>
       </button>
 
       {/* Mobile */}
@@ -167,7 +167,7 @@ export default function Pagination({ page, totalPages, onPageChange, className }
         onClick={goNext}
         className='cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex gap-1.5 items-center font-medium text-neutral-950 tracking-t-3 text-md shrink-0'
       >
-        <span className='hidden md:inline'>Next</span>
+        <span className='sr-only md:not-sr-only md:inline'>Next</span>
         <img src={chevronRightIcon} alt='' className='size-6' />
       </button>
     </div>
