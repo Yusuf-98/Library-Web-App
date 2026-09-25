@@ -65,7 +65,7 @@ export default function AdminBorrowedListPage() {
         </FadeInUp>
 
         {/* Search */}
-        <FadeIn delay={100}>
+        <FadeIn delay={40}>
           <AdminSearchInput
             value={query}
             onChange={setQuery}
@@ -75,7 +75,7 @@ export default function AdminBorrowedListPage() {
       </div>
 
       {/* Status filter */}
-      <FadeIn delay={200}>
+      <FadeIn delay={80}>
         <AdminStatusFilters
           filters={STATUS_FILTERS}
           value={status}
@@ -109,7 +109,7 @@ export default function AdminBorrowedListPage() {
       {/* Loan list */}
       <div className="flex flex-col gap-[clamp(15px,calc(4.71px+1.34vw),24px)] w-full">
         {loans.map((loan, index) => (
-          <FadeInUp key={loan.id} delay={(index % 3) * 250}>
+          <FadeInUp key={loan.id} delay={(index % 3) * 80}>
             <CardAdminBorrowedList
               title={loan.book.title}
               author={loan.book.author.name}

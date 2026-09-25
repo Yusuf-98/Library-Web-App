@@ -13,7 +13,7 @@ export default function AdminProfilePage() {
         </FadeInUp>
 
         {/* Profile card */}
-        <FadeInUp delay={250}>
+        <FadeInUp delay={80}>
           <ProfileCard idPrefix='admin-profile' />
         </FadeInUp>
       </div>

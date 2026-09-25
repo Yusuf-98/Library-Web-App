@@ -38,7 +38,7 @@ export default function ReviewsPage() {
       </FadeInUp>
 
       {/* Search */}
-      <FadeIn delay={100}>
+      <FadeIn delay={40}>
         <div className='flex items-center gap-1.5 h-11 md:h-12 px-xl py-md rounded-full border border-neutral-300 bg-white w-full md:w-136'>
           <img src={searchIcon} alt='' className='shrink-0 size-5' />
           <input
@@ -75,7 +75,7 @@ export default function ReviewsPage() {
       {/* Review list */}
       <div className='flex flex-col gap-[clamp(16px,calc(6.86px+1.19vw),24px)] w-full'>
         {filtered.map((review, index) => (
-          <FadeInUp key={review.id} delay={(index % 3) * 250}>
+          <FadeInUp key={review.id} delay={(index % 3) * 80}>
             <CardMyReview
               createdAt={formatReviewDate(review.createdAt)}
               title={review.book.title}

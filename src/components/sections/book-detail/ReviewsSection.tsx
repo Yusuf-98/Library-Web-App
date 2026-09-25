@@ -80,7 +80,7 @@ export default function ReviewsSection({ bookId, book, user }: ReviewsSectionPro
         {/* Review list */}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-x-2xl gap-y-4.5'>
           {reviews.map((review, index) => (
-            <FadeInUp key={review.id} delay={(index % 2) * 250}>
+            <FadeInUp key={review.id} delay={(index % 2) * 80}>
               <CardReview
                 name={review.user.name}
                 avatar={

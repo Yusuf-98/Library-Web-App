@@ -44,7 +44,7 @@ export default function CheckoutSummarySection({
           Book List
         </p>
         {items.map((item, index) => (
-          <FadeInUp key={item.id} delay={(index % 3) * 250}>
+          <FadeInUp key={item.id} delay={(index % 3) * 80}>
             <BookInfo
               cover={item.book.coverImage}
               title={item.book.title}

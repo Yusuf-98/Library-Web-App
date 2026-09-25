@@ -40,7 +40,7 @@ export default function RelatedBooksSection({
         {/* Book grid */}
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-xl md:gap-2xl'>
           {relatedBooks.map((b, index) => (
-            <FadeInUp key={b.id} delay={(index % 5) * 250}>
+            <FadeInUp key={b.id} delay={(index % 5) * 80}>
               <CardBook
                 title={b.title}
                 author={b.author.name}

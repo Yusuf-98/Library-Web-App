@@ -42,7 +42,7 @@ export default function CartItemListSection({
       {items.map((item, index) => (
         <FadeInUp
           key={item.id}
-          delay={(index % 3) * 250}
+          delay={(index % 3) * 80}
           className='flex flex-col gap-xl md:gap-3xl w-full'
         >
           <ListCart

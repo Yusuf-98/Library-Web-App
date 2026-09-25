@@ -65,7 +65,7 @@ export default function LoansListSection({
       {/* Loan list */}
       <div className='flex flex-col gap-[clamp(15px,calc(13.86px+0.1488vw),16px)] items-center w-full'>
         {loans.map((loan, index) => (
-          <FadeInUp key={loan.id} delay={(index % 3) * 250} className='w-full'>
+          <FadeInUp key={loan.id} delay={(index % 3) * 80} className='w-full'>
             <CardBorrowedList
               title={loan.book.title}
               author={loan.book.author.name}

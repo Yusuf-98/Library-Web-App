@@ -62,7 +62,7 @@ export default function CheckoutPage() {
                 <CheckoutSummarySection user={data.user} items={items} />
               </FadeInUp>
               <FadeInUp
-                delay={250}
+                delay={80}
                 className='w-full md:w-auto md:flex-[4.9] md:basis-80 md:shrink'
               >
                 <BorrowFormSection items={items} />

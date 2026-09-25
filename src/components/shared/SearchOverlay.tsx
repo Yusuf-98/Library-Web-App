@@ -102,7 +102,7 @@ export default function SearchOverlay() {
         {!isError && books.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2xl">
             {books.map((book, index) => (
-              <FadeInUp key={book.id} delay={(index % 5) * 250}>
+              <FadeInUp key={book.id} delay={(index % 5) * 80}>
                 <CardBook
                   title={book.title}
                   author={book.author.name}

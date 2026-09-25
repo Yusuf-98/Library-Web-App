@@ -20,11 +20,11 @@ const AXIS: Record<Direction, { x: number; y: number }> = {
 
 // --- Config ---
 const CONFIG: Record<Direction, { duration: number; distance: number }> = {
-  up: { duration: 1400, distance: 30 },
-  down: { duration: 1400, distance: 30 },
-  left: { duration: 1400, distance: 30 },
-  right: { duration: 1400, distance: 30 },
-  none: { duration: 2400, distance: 0 },
+  up: { duration: 600, distance: 30 },
+  down: { duration: 600, distance: 30 },
+  left: { duration: 600, distance: 30 },
+  right: { duration: 600, distance: 30 },
+  none: { duration: 600, distance: 0 },
 };
 
 interface StaggerItemProps {
@@ -32,22 +32,20 @@ interface StaggerItemProps {
   delay?: number;
   duration?: number;
   distance?: number;
+  instant?: boolean;
   className?: string;
 }
 
-function StaggerItem({
+// --- Animated item ---
+function AnimatedItem({
   direction,
   children,
   delay = 0,
   duration = CONFIG[direction].duration,
   distance = CONFIG[direction].distance,
   className,
-}: StaggerItemProps & { direction: Direction }) {
+}: Omit<StaggerItemProps, 'instant'> & { direction: Direction }) {
   const { ref, isInView } = useInView<HTMLDivElement>();
-
-  if (prefersReducedMotion) {
-    return <div className={className}>{children}</div>;
-  }
 
   const axis = AXIS[direction];
   const hiddenTranslate = `${axis.x * distance}px ${axis.y * distance}px`;
@@ -68,6 +66,18 @@ function StaggerItem({
       {children}
     </div>
   );
+}
+
+// --- Item ---
+function StaggerItem({
+  instant,
+  ...props
+}: StaggerItemProps & { direction: Direction }) {
+  if (prefersReducedMotion || instant) {
+    return <div className={props.className}>{props.children}</div>;
+  }
+
+  return <AnimatedItem {...props} />;
 }
 
 export function FadeInUp(props: StaggerItemProps) {

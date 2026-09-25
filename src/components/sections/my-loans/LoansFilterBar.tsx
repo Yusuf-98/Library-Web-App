@@ -43,7 +43,7 @@ export default function LoansFilterBar({
       </FadeIn>
 
       {/* Filter pills */}
-      <FadeIn delay={100}>
+      <FadeIn delay={40}>
         <div className='flex items-center gap-md md:gap-lg flex-wrap'>
           {STATUS_FILTERS.map((f) => (
             <button

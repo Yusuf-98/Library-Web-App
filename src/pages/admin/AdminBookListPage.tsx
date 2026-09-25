@@ -81,7 +81,7 @@ export default function AdminBookListPage() {
           </FadeInUp>
 
           {/* Add button */}
-          <FadeIn delay={100}>
+          <FadeIn delay={40}>
             <Button
               type='button'
               variant='primary'
@@ -94,7 +94,7 @@ export default function AdminBookListPage() {
           </FadeIn>
 
           {/* Search */}
-          <FadeIn delay={200}>
+          <FadeIn delay={80}>
             <AdminSearchInput
               value={query}
               onChange={setQuery}
@@ -103,7 +103,7 @@ export default function AdminBookListPage() {
           </FadeIn>
 
           {/* Status filter */}
-          <FadeIn delay={300}>
+          <FadeIn delay={120}>
             <AdminStatusFilters
               filters={STATUS_FILTERS}
               value={status}
@@ -142,7 +142,7 @@ export default function AdminBookListPage() {
           {books.map((book, index) => (
             <FadeInUp
               key={book.id}
-              delay={(index % 3) * 250}
+              delay={(index % 3) * 80}
               className='bg-white rounded-2xl shadow-card flex items-center justify-between gap-xl p-xl md:p-2xl w-full'
             >
               <div className='flex-1 min-w-0 flex gap-lg md:gap-xl items-center'>

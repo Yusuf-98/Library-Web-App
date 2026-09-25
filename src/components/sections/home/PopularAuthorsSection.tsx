@@ -47,7 +47,7 @@ export default function PopularAuthorsSection() {
       {!authorsLoading && !authorsError && (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2xl'>
           {(authors ?? []).map((author, index) => (
-            <FadeInUp key={author.id} delay={(index % 4) * 250}>
+            <FadeInUp key={author.id} delay={(index % 4) * 80}>
               <CardAuthor
                 name={author.name}
                 bookCount={author.bookCount}

@@ -38,7 +38,7 @@ export default function AdminUserListPage() {
         </FadeInUp>
 
         {/* Search */}
-        <FadeIn delay={100}>
+        <FadeIn delay={40}>
           <AdminSearchInput
             value={query}
             onChange={setQuery}
@@ -76,7 +76,7 @@ export default function AdminUserListPage() {
               {users.map((u, index) => (
                 <FadeInUp
                   key={u.id}
-                  delay={(index % 3) * 250}
+                  delay={(index % 3) * 80}
                   className='bg-white rounded-xl shadow-card flex flex-col gap-1 p-lg w-full'
                 >
                   <div className='flex items-center justify-between w-full'>
@@ -159,7 +159,7 @@ export default function AdminUserListPage() {
                 {users.map((u, index) => (
                   <FadeInUp
                     key={u.id}
-                    delay={(index % 3) * 250}
+                    delay={(index % 3) * 80}
                     className='flex items-start w-full'
                   >
                     <div className='border-b border-neutral-300 flex items-center h-16 px-xl py-md w-11 shrink-0'>
