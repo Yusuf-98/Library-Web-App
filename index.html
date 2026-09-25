@@ -2,6 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Early data -->
+    <link rel="preconnect" href="%VITE_API_URL%" crossorigin />
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <script>
+      (function () {
+        var api = '%VITE_API_URL%';
+        if (location.pathname !== '/' || api.indexOf('http') !== 0 || !window.fetch) return;
+        var request = fetch(api + '/books?limit=10&page=1').then(function (response) {
+          return response.json();
+        });
+        request.catch(function () {});
+        window.__earlyBooks = request;
+      })();
+    </script>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -46,7 +60,17 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- App shell -->
+      <div aria-hidden="true" class="min-h-screen bg-neutral-50 flex flex-col">
+        <div class="w-full h-16 md:h-[clamp(64px,calc(45.71px+2.381vw),80px)] mb-5 bg-white shadow-navbar flex items-center">
+          <div class="custom-container w-full flex items-center gap-1 md:gap-3.75">
+            <img src="/src/assets/images/logo-booky.png" alt="" class="size-10 md:size-[clamp(40px,calc(37.71px+0.298vw),42px)] object-contain" />
+            <span class="hidden md:inline text-display-md font-extrabold text-neutral-950">Booky</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

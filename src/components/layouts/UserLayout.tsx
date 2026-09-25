@@ -1,5 +1,7 @@
+import { Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/shared/Navbar';
+import PageFallback from '@/components/shared/PageFallback';
 import { useAppSelector } from '@/app/hooks';
 import { useCartCount } from '@/features/cart/useCartCount';
 
@@ -22,7 +24,11 @@ export default function UserLayout() {
         onLoginClick={() => navigate('/login')}
         onRegisterClick={() => navigate('/register')}
       />
-      <Outlet />
+
+      {/* Page */}
+      <Suspense fallback={<PageFallback />}>
+        <Outlet />
+      </Suspense>
     </div>
   );
 }

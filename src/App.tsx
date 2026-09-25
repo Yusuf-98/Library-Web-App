@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from '@/components/ui/sonner';
+import PageFallback from '@/components/shared/PageFallback';
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
 import AdminRoute from '@/components/shared/AdminRoute';
 import SearchOverlay from '@/components/shared/SearchOverlay';
@@ -8,6 +8,9 @@ import ScrollToTop from '@/components/shared/ScrollToTop';
 import UserLayout from '@/components/layouts/UserLayout';
 import AccountSectionLayout from '@/components/layouts/AccountSectionLayout';
 
+const Toaster = lazy(() =>
+  import('@/components/ui/sonner').then((m) => ({ default: m.Toaster }))
+);
 const AdminLayout = lazy(() => import('@/components/layouts/AdminLayout'));
 const AdminSectionLayout = lazy(
   () => import('@/components/layouts/AdminSectionLayout')
@@ -36,14 +39,6 @@ const AdminBorrowedListPage = lazy(
   () => import('@/pages/admin/AdminBorrowedListPage')
 );
 const AdminProfilePage = lazy(() => import('@/pages/admin/AdminProfilePage'));
-
-function PageFallback() {
-  return (
-    <div className='flex-1 flex justify-center items-center min-h-screen'>
-      <span className='size-8 border-2 border-primary-300/30 border-t-primary-300 rounded-full animate-spin' />
-    </div>
-  );
-}
 
 function App() {
   return (
@@ -101,11 +96,13 @@ function App() {
         </Routes>
       </Suspense>
       <SearchOverlay />
-      <Toaster
-        position='top-right'
-        offset={{ top: 20, right: 120 }}
-        mobileOffset={{ top: 20, right: 16 }}
-      />
+      <Suspense fallback={null}>
+        <Toaster
+          position='top-right'
+          offset={{ top: 20, right: 120 }}
+          mobileOffset={{ top: 20, right: 16 }}
+        />
+      </Suspense>
     </BrowserRouter>
   );
 }
