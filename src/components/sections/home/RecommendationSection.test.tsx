@@ -7,7 +7,10 @@ import { getBooks } from '@/lib/api/books';
 import type { Book, PaginatedBooks } from '@/types';
 import RecommendationSection from './RecommendationSection';
 
-vi.mock('@/lib/api/books', () => ({ getBooks: vi.fn() }));
+vi.mock('@/lib/api/books', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/api/books')>()),
+  getBooks: vi.fn(),
+}));
 
 const book = (id: number) =>
   ({
@@ -56,6 +59,20 @@ describe('RecommendationSection', () => {
     expect(await screen.findByRole('button', { name: /Book 1/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Book 2/ })).toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('loads only the first four covers right away and lazy-loads the rest', async () => {
+    vi.mocked(getBooks).mockResolvedValue(page([1, 2, 3, 4, 5, 6].map(book), 1, 1));
+    setup();
+
+    await screen.findByRole('button', { name: /Book 1/ });
+    const loading = (id: number) => screen.getByAltText(`Book ${id}`).getAttribute('loading');
+    const priority = (id: number) => screen.getByAltText(`Book ${id}`).getAttribute('fetchpriority');
+
+    expect([1, 2, 3, 4].map(loading)).toEqual(['eager', 'eager', 'eager', 'eager']);
+    expect([1, 2, 3, 4].map(priority)).toEqual(['high', 'high', 'high', 'high']);
+    expect([5, 6].map(loading)).toEqual(['lazy', 'lazy']);
+    expect([5, 6].map(priority)).toEqual([null, null]);
   });
 
   it('opens a book when its card is clicked', async () => {

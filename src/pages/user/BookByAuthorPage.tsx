@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Footer from '@/components/shared/Footer';
-import CardBook from '@/components/common/CardBook';
+import CardBook, { PRIORITY_COVER_COUNT } from '@/components/common/CardBook';
 import CardAuthor from '@/components/common/CardAuthor';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { getBooksByAuthor } from '@/lib/api/authors';
@@ -66,7 +66,11 @@ export default function BookByAuthorPage() {
           {books.length > 0 && (
             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2xl'>
               {books.map((book, index) => (
-                <FadeInUp key={book.id} delay={(index % 5) * 250}>
+                <FadeInUp
+                  key={book.id}
+                  delay={(index % 5) * 80}
+                  instant={index < PRIORITY_COVER_COUNT}
+                >
                   <CardBook
                     title={book.title}
                     author={book.author.name}
@@ -74,6 +78,7 @@ export default function BookByAuthorPage() {
                     rating={book.rating}
                     onClick={() => navigate(`/books/${book.id}`)}
                     className='w-full'
+                    priority={index < PRIORITY_COVER_COUNT}
                   />
                 </FadeInUp>
               ))}

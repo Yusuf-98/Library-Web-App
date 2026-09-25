@@ -58,7 +58,7 @@ export default function CategorySection() {
       {/* Dots */}
       {(categoriesLoading ||
         (!categoriesError && orderedCategories.length > CATEGORY_WINDOW)) && (
-          <FadeInUp>
+          <FadeInUp instant>
             <div className='flex items-center justify-center -mt-1 md:-mt-7.5 mb-2.5 md:mb-0'>
               {CATEGORY_WINDOW_STARTS.map((_, i) =>
                 categoriesLoading ? (
@@ -116,12 +116,8 @@ export default function CategorySection() {
             onPointerDown={handleCategoryPointerDown}
             onPointerUp={handleCategoryPointerUp}
           >
-            {visibleCategories.map((category, index) => (
-              <FadeInUp
-                key={category.id}
-                delay={index * 250}
-                className='flex-1 min-w-0'
-              >
+            {visibleCategories.map((category) => (
+              <FadeInUp instant key={category.id} className='flex-1 min-w-0'>
                 <CardCategory
                   name={category.name}
                   icon={getCategoryIcon(category.name)}

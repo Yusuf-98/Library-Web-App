@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Footer from '@/components/shared/Footer';
-import CardBook from '@/components/common/CardBook';
+import CardBook, { PRIORITY_COVER_COUNT } from '@/components/common/CardBook';
 import { FadeInUp, FadeInLeft } from '@/components/common/StaggeredItems';
 import FilterSidebar from '@/components/user/FilterSidebar';
 import {
@@ -125,7 +125,11 @@ export default function CategoryPage() {
             {books.length > 0 && (
               <div className='grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-xl md:gap-2xl'>
                 {books.map((book, index) => (
-                  <FadeInUp key={book.id} delay={(index % 4) * 250}>
+                  <FadeInUp
+                    key={book.id}
+                    delay={(index % 4) * 80}
+                    instant={index < PRIORITY_COVER_COUNT}
+                  >
                     <CardBook
                       title={book.title}
                       author={book.author.name}
@@ -133,6 +137,7 @@ export default function CategoryPage() {
                       rating={book.rating}
                       onClick={() => navigate(`/books/${book.id}`)}
                       className='w-full'
+                      priority={index < PRIORITY_COVER_COUNT}
                     />
                   </FadeInUp>
                 ))}

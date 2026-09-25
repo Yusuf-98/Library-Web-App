@@ -3,6 +3,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { optimizeImageUrl } from '@/lib/imageUrl';
 import { cn } from '@/lib/utils';
 
+export const PRIORITY_COVER_COUNT = 4;
+
 interface CardBookProps {
   title: string;
   author: string;
@@ -10,6 +12,7 @@ interface CardBookProps {
   rating: number;
   onClick?: () => void;
   className?: string;
+  priority?: boolean;
 }
 
 export default function CardBook({
@@ -19,6 +22,7 @@ export default function CardBook({
   rating,
   onClick,
   className,
+  priority = false,
 }: CardBookProps) {
   return (
     <button
@@ -33,7 +37,8 @@ export default function CardBook({
       <img
         src={optimizeImageUrl(cover, 400)}
         alt={title}
-        loading='lazy'
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : undefined}
         className='w-full aspect-2/3 object-cover'
       />
 

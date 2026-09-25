@@ -25,6 +25,18 @@ describe('CardBook', () => {
     expect(img).toHaveAttribute('loading', 'lazy');
   });
 
+  it('loads a priority cover right away with a high fetch priority', () => {
+    render(<CardBook {...props} priority />);
+    const img = screen.getByAltText('Clean Code');
+    expect(img).toHaveAttribute('loading', 'eager');
+    expect(img).toHaveAttribute('fetchpriority', 'high');
+  });
+
+  it('leaves the fetch priority alone for a regular cover', () => {
+    render(<CardBook {...props} />);
+    expect(screen.getByAltText('Clean Code')).not.toHaveAttribute('fetchpriority');
+  });
+
   it('keeps covers from other hosts as they are', () => {
     render(<CardBook {...props} cover='https://covers.openlibrary.org/b/id/1-L.jpg' />);
     expect(screen.getByAltText('Clean Code')).toHaveAttribute('src', 'https://covers.openlibrary.org/b/id/1-L.jpg');

@@ -78,7 +78,7 @@ export default function Navbar({
   };
 
   return (
-    <FadeIn className='w-full'>
+    <FadeIn instant className='w-full'>
       <nav
         className={cn(
           'flex items-center h-16 md:h-[clamp(64px,calc(45.71px+2.381vw),80px)] w-full mb-5',

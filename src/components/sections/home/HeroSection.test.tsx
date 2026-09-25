@@ -14,6 +14,7 @@ describe('HeroSection', () => {
   it('offers a small variant for narrow screens and a large one for wide screens', () => {
     const srcset = banner().getAttribute('srcset') ?? '';
     expect(srcset).toMatch(/hero-banner-home-640.*\s640w/);
+    expect(srcset).toMatch(/hero-banner-home-800.*\s800w/);
     expect(srcset).toMatch(/hero-banner-home-1200.*\s1200w/);
   });
 

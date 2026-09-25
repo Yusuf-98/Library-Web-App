@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import CardBook, { CardBookSkeleton } from '@/components/common/CardBook';
+import CardBook, {
+  CardBookSkeleton,
+  PRIORITY_COVER_COUNT,
+} from '@/components/common/CardBook';
 import { FadeInUp } from '@/components/common/StaggeredItems';
 import { Button } from '@/components/ui/button';
-import { getBooks } from '@/lib/api/books';
+import { getBooks, HOME_BOOKS_PARAMS } from '@/lib/api/books';
 import { queryKeys } from '@/lib/queryKeys';
 import { SectionError } from './SectionState';
 
@@ -20,7 +23,8 @@ export default function RecommendationSection() {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: queryKeys.books.home,
-    queryFn: ({ pageParam }) => getBooks({ limit: 10, page: pageParam }),
+    queryFn: ({ pageParam }) =>
+      getBooks({ limit: HOME_BOOKS_PARAMS.limit, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.pagination.page < lastPage.pagination.totalPages
@@ -34,7 +38,7 @@ export default function RecommendationSection() {
   return (
     <section className='flex flex-col gap-[clamp(20px,calc(-2.86px+2.976vw),40px)]'>
       {/* Title */}
-      <FadeInUp>
+      <FadeInUp instant>
         <h2 className='text-display-xs md:text-[clamp(24px,calc(10.29px+1.786vw),36px)] font-bold text-neutral-950'>
           Recommendation
         </h2>
@@ -66,7 +70,11 @@ export default function RecommendationSection() {
       {books.length > 0 && (
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2xl'>
           {books.map((book, index) => (
-            <FadeInUp key={book.id} delay={(index % 5) * 250}>
+            <FadeInUp
+              key={book.id}
+              delay={(index % 5) * 80}
+              instant={index < PRIORITY_COVER_COUNT}
+            >
               <CardBook
                 title={book.title}
                 author={book.author.name}
@@ -74,6 +82,7 @@ export default function RecommendationSection() {
                 rating={book.rating}
                 onClick={() => navigate(`/books/${book.id}`)}
                 className='w-full'
+                priority={index < PRIORITY_COVER_COUNT}
               />
             </FadeInUp>
           ))}
