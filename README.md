@@ -113,11 +113,12 @@ Tests live next to the code they cover (`*.test.ts` / `*.test.tsx`) and run with
 - **Dates and timezones**: the default borrow date and the return date are checked in Toronto, Los Angeles, Jakarta and UTC, including US daylight-saving changes and leap years.
 - **Borrow form**: default and minimum date, return-date recalculation, agreement gating and the payload sent on submit.
 - **Search overlay**: results, empty and error states, Escape to close, scroll lock, and closing when a result is opened.
-- **Accessibility**: the tabs (roving tabindex, arrow/Home/End keys, tabpanel wiring), the overlay hook (focus return) and the filter checkboxes.
+- **Accessibility**: the tabs and the roving-tabs hook (roving tabindex, arrow/Home/End keys, tabpanel wiring), the overlay hook (focus return) and the filter checkboxes.
 - **Forms and search**: the registration rules and the full Register flow (field errors, focus, trimmed values, server errors), the Login flow (admin redirect, refused credentials), and the debounced search hooks (one request once typing pauses; a new search restarts at page 1).
 - **Checkout logic**: `useBorrowMutation` (optimistic cart and stock update, rollback on failure, partial failures, success redirect) and the Cart page (selection, Select All, removal by cart item id).
 - **Access control**: `ProtectedRoute` and `AdminRoute`, including an exact-match check on the `ADMIN` role.
-- **Home page**: loading skeletons, paging through categories, "Load More", error and empty states.
+- **Home page**: loading skeletons, paging through categories, "Load More", error and empty states, and which covers load first.
+- **Start-up**: the early book request started by `index.html` (used once, with a fallback to the API client), the layout that keeps the navbar while a page loads, and the fade-in items.
 - **API contract**: every function in `src/lib/api` is checked for the path, method, query string, body and envelope part it sends and returns.
 - **Resilience**: the error boundary fallback, "not found" versus generic error states on the book and author pages, the API client (status-preserving errors, Bearer token, 401 logout) and the retry policy (4xx answers are not retried).
 - **Admin forms**: the cover-image controls in the book form.
@@ -126,9 +127,12 @@ GitHub Actions runs lint, type-check, tests and the production build on every pu
 
 ## Performance
 
-- **Cover images** are requested from Cloudinary at about twice their displayed size in a modern format (`f_auto,q_auto,c_limit`), and lazy-loaded below the fold. A 2.2 MB cover becomes about 35 KB.
-- **Hero banner** is a responsive WebP (`srcset` for narrow and wide screens) with `fetchpriority="high"` and declared dimensions.
+- **Start-up**: `index.html` connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar shell is painted straight away, and the toast library loads only when needed.
+- **Cover images** are requested at about twice their displayed size in a modern format: Cloudinary through `f_auto,q_auto,c_limit`, and Gramedia and Amazon covers through their own size parameters (`src/lib/imageUrl.ts`). The first four covers load eagerly with a high fetch priority; the rest are lazy-loaded. A 2.2 MB cover becomes about 35 KB.
+- **Hero banner** is a responsive WebP (`srcset` with 640, 800 and 1200 px variants) with `fetchpriority="high"` and declared dimensions.
+- **Motion**: items fade in over 600 ms as they scroll into view; the navbar, hero, categories and the first four books appear immediately.
 - **Loading skeletons** have exactly the same box model as the cards they stand in for, so nothing shifts when data arrives (Cumulative Layout Shift of 0 on the home page).
+- **Caching**: hashed files under `/assets` are served as immutable ([vercel.json](vercel.json)), so a returning visit does not revalidate them.
 - **Requests** are kept lean: search is debounced, 4xx answers are not retried, and routes are code-split.
 
 ## API
