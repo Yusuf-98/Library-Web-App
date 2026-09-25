@@ -31,6 +31,8 @@ export default function CardCategory({
         <img
           src={icon}
           alt={name}
+          width={52}
+          height={52}
           className='object-cover size-11.2 md:size-[clamp(44.8px,calc(37.49px+0.952vw),51.2px)]'
         />
       </div>
