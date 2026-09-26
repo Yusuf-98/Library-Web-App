@@ -14,6 +14,7 @@ To try the reader flow (cart, checkout, loans, reviews), create an account on th
   <img src="docs/screenshots/home-hero.png" alt="Booky home page with hero banner and book categories" width="820">
 </p>
 
+[![Lighthouse](https://img.shields.io/badge/Lighthouse-96_mobile_%C2%B7_100_desktop-brightgreen?logo=lighthouse&logoColor=white)](#performance)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
@@ -127,11 +128,49 @@ GitHub Actions runs lint, type-check, tests and the production build on every pu
 
 ## Performance
 
+Lighthouse results for the [live site](https://library-web-by-yusuf.vercel.app/): the median of 10 mobile and 6 desktop runs on 26 September 2026 (Lighthouse 13.5.0).
+
+| | 📱 Mobile | 🖥️ Desktop |
+| --- | :---: | :---: |
+| **Performance** | **96** | **100** |
+| **Accessibility** | **100** | **100** |
+| **Best practices** | **100** | **100** |
+| **SEO** | **100** | **100** |
+
+Mobile performance ranged from 89 to 97 across the 10 runs (median 95.5); desktop from 98 to 100.
+
+### Core metrics
+
+| Metric | 📱 Mobile | 🖥️ Desktop | Good if |
+| --- | :---: | :---: | :---: |
+| **Largest Contentful Paint** (main content visible) | 🟢 2.3 s | 🟢 0.7 s | ≤ 2.5 s |
+| **Total Blocking Time** (page unresponsive) | 🟢 81 ms | 🟢 0 ms | ≤ 200 ms |
+| **Cumulative Layout Shift** (content jumping) | 🟢 0 | 🟢 0 | ≤ 0.1 |
+| **Speed Index** (how fast it fills in) | 🟢 3.2 s | 🟢 0.8 s | ≤ 3.4 s |
+| **First Contentful Paint** (first pixels) | 🟠 2.1 s | 🟢 0.6 s | ≤ 1.8 s |
+| **Page weight** (home page, compressed) | 499 KiB | 515 KiB | |
+
+🟢 within Google's "good" range · 🟠 needs improvement
+
+### What "mobile" means in this test
+
+The mobile test does not simply run on a fast laptop. Lighthouse slows the machine down to imitate a mid-range phone on a weak connection:
+
+- **Device**: a Moto G Power (2022), 412 × 823 px screen at 1.75× pixel density.
+- **Network**: simulated slow 4G, about **1.6 Mbps** download with **150 ms** of round-trip latency.
+- **CPU**: slowed down **4×**, so JavaScript takes four times as long to run as it does on the laptop.
+
+The desktop test uses a 1350 × 940 px screen, 10 Mbps, 40 ms latency and no CPU slowdown.
+
+Run it yourself with [PageSpeed Insights](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Flibrary-web-by-yusuf.vercel.app%2F&form_factor=mobile) or `npx lighthouse https://library-web-by-yusuf.vercel.app/ --form-factor=mobile`. A single run can move by a few points with network conditions, which is why the figures above are medians.
+
+### How it stays fast
+
 - **Start-up**: `index.html` connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar and hero shell is painted straight away (the hero is removed on other pages, and a test keeps it identical to `HeroSection`), the toast library loads only when needed, and the first render runs inside a React transition so it is split into short tasks instead of one long block.
 - **Cover images** are requested at about twice their displayed size in a modern format: Cloudinary through `f_auto,q_auto,c_limit`, and Gramedia and Amazon covers through their own size parameters (`src/lib/imageUrl.ts`). The first four covers load eagerly with a high fetch priority; the rest are lazy-loaded. A 2.2 MB cover becomes about 35 KB.
 - **Hero banner** is a responsive WebP (`srcset` with 640, 800 and 1200 px variants) with `fetchpriority="high"` and declared dimensions.
 - **Motion**: items fade in over 600 ms as they scroll into view; the navbar, hero, categories and the first four books appear immediately.
-- **Loading skeletons** have exactly the same box model as the cards they stand in for, so nothing shifts when data arrives (Cumulative Layout Shift of 0 on the home page).
+- **Loading skeletons** have exactly the same box model as the cards they stand in for, so nothing shifts when data arrives.
 - **Caching**: hashed files under `/assets` are served as immutable ([vercel.json](vercel.json)), so a returning visit does not revalidate them.
 - **Requests** are kept lean: search is debounced, 4xx answers are not retried, and routes are code-split.
 
