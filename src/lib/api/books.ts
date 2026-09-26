@@ -85,13 +85,16 @@ export const createBook = (payload: BookPayload) =>
     .post<Book>('/books', toBookFormData(payload), { headers: { 'Content-Type': 'multipart/form-data' } })
     .then((r) => r.data);
 
-export const updateBook = (id: number, payload: Partial<BookPayload>) => {
-  if (payload.coverImage instanceof File) {
-    return api
-      .put<Book>(`/books/${id}`, toBookFormData(payload), { headers: { 'Content-Type': 'multipart/form-data' } })
-      .then((r) => r.data);
+export const updateBook = async (id: number, payload: Partial<BookPayload>) => {
+  const { coverImage, ...fields } = payload;
+  if (!(coverImage instanceof File)) {
+    return api.put<Book>(`/books/${id}`, fields).then((r) => r.data);
   }
-  return api.put<Book>(`/books/${id}`, payload).then((r) => r.data);
+
+  if (Object.keys(fields).length > 0) await api.put<Book>(`/books/${id}`, fields);
+  return api
+    .put<Book>(`/books/${id}`, toBookFormData({ coverImage }), { headers: { 'Content-Type': 'multipart/form-data' } })
+    .then((r) => r.data);
 };
 
 export const deleteBook = (id: number) => api.delete(`/books/${id}`);

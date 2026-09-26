@@ -12,16 +12,19 @@ import { getAdminUsers, getMyProfile, updateMyProfile } from './users';
 
 const defaultAdapter = api.defaults.adapter;
 let sent: InternalAxiosRequestConfig;
+let requests: InternalAxiosRequestConfig[] = [];
 
 function backendReplies(data: unknown = {}) {
   api.defaults.adapter = (async (config: InternalAxiosRequestConfig) => {
     sent = config;
+    requests.push(config);
     return { data: { success: true, message: 'ok', data }, status: 200, statusText: '', headers: {}, config };
   }) as AxiosAdapter;
 }
 
 afterEach(() => {
   api.defaults.adapter = defaultAdapter;
+  requests = [];
 });
 
 const body = () => JSON.parse(sent.data as string);
@@ -75,11 +78,36 @@ describe('books', () => {
     expect(body()).toEqual({ title: 'T', publishedYear: 2020, totalCopies: 4 });
   });
 
-  it('updateBook switches to multipart only when a new cover file is uploaded', async () => {
+  it('updateBook sends the fields as JSON first and the new cover alone as multipart afterwards', async () => {
     backendReplies({ id: 5 });
-    await updateBook(5, { title: 'T', coverImage: new File(['x'], 'c.png', { type: 'image/png' }) });
-    expect(sent.data).toBeInstanceOf(FormData);
-    expect(form().coverImage).toBeInstanceOf(File);
+    await updateBook(5, { title: 'T', publishedYear: 2020, totalCopies: 4, coverImage: new File(['x'], 'c.png', { type: 'image/png' }) });
+
+    expect(requests.map((r) => [r.method, r.url])).toEqual([
+      ['put', '/books/5'],
+      ['put', '/books/5'],
+    ]);
+    expect(JSON.parse(requests[0].data as string)).toEqual({ title: 'T', publishedYear: 2020, totalCopies: 4 });
+    expect(requests[1].data).toBeInstanceOf(FormData);
+    expect([...(requests[1].data as FormData).keys()]).toEqual(['coverImage']);
+  });
+
+  it('updateBook sends only the cover when there is nothing else to change', async () => {
+    backendReplies({ id: 5 });
+    await updateBook(5, { coverImage: new File(['x'], 'c.png', { type: 'image/png' }) });
+    expect(requests).toHaveLength(1);
+    expect(requests[0].data).toBeInstanceOf(FormData);
+  });
+
+  it('updateBook does not upload the cover when the fields are rejected', async () => {
+    api.defaults.adapter = (async (config: InternalAxiosRequestConfig) => {
+      requests.push(config);
+      throw new Error('Failed to update book');
+    }) as AxiosAdapter;
+
+    await expect(
+      updateBook(5, { title: 'T', coverImage: new File(['x'], 'c.png', { type: 'image/png' }) })
+    ).rejects.toThrow('Failed to update book');
+    expect(requests).toHaveLength(1);
   });
 
   it('deleteBook deletes by id', async () => {
