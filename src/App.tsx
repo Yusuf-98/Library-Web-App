@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import PageFallback from '@/components/shared/PageFallback';
+import HomePage from '@/pages/user/HomePage';
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
 import AdminRoute from '@/components/shared/AdminRoute';
 import SearchOverlay from '@/components/shared/SearchOverlay';
@@ -18,7 +19,6 @@ const AdminSectionLayout = lazy(
 
 const LoginPage = lazy(() => import('@/pages/user/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/user/RegisterPage'));
-const HomePage = lazy(() => import('@/pages/user/HomePage'));
 const BookDetailPage = lazy(() => import('@/pages/user/BookDetailPage'));
 const CategoryPage = lazy(() => import('@/pages/user/CategoryPage'));
 const BookByAuthorPage = lazy(() => import('@/pages/user/BookByAuthorPage'));

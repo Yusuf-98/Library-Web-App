@@ -69,6 +69,26 @@
             <span class="hidden md:inline text-display-md font-extrabold text-neutral-950">Booky</span>
           </div>
         </div>
+        <!-- Hero -->
+        <main id="shell-hero" class="flex-1 custom-container flex flex-col pt-xl md:pt-[clamp(16px,calc(-20.57px+4.762vw),48px)] gap-xl md:gap-[clamp(16px,calc(-20.57px+4.762vw),48px)]">
+          <section>
+            <div>
+              <img
+                src="/src/assets/images/hero-banner-home-1200.webp"
+                srcset="/src/assets/images/hero-banner-home-640.webp 640w, /src/assets/images/hero-banner-home-800.webp 800w, /src/assets/images/hero-banner-home-1200.webp 1200w"
+                sizes="(min-width: 1280px) 1200px, calc(100vw - 32px)"
+                width="1200"
+                height="441"
+                fetchpriority="high"
+                alt="Welcome to Booky"
+                class="w-full aspect-1200/441 object-cover rounded-4xl"
+              />
+            </div>
+          </section>
+        </main>
+        <script>
+          if (location.pathname !== '/') document.getElementById('shell-hero').remove();
+        </script>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
