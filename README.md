@@ -14,7 +14,7 @@ To try the reader flow (cart, checkout, loans, reviews), create an account on th
   <img src="docs/screenshots/home-hero.png" alt="Booky home page with hero banner and book categories" width="820">
 </p>
 
-[![Lighthouse](https://img.shields.io/badge/Lighthouse-96_mobile_%C2%B7_100_desktop-brightgreen?logo=lighthouse&logoColor=white)](#performance)
+[![Lighthouse](https://img.shields.io/badge/Lighthouse-97_mobile_%C2%B7_100_desktop-brightgreen?logo=lighthouse&logoColor=white)](#performance)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
@@ -119,7 +119,7 @@ Tests live next to the code they cover (`*.test.ts` / `*.test.tsx`) and run with
 - **Checkout logic**: `useBorrowMutation` (optimistic cart and stock update, rollback on failure, partial failures, success redirect) and the Cart page (selection, Select All, removal by cart item id).
 - **Access control**: `ProtectedRoute` and `AdminRoute`, including an exact-match check on the `ADMIN` role.
 - **Home page**: loading skeletons, paging through categories, "Load More", error and empty states, and which covers load first.
-- **Start-up**: the early book request started by `index.html` (used once, with a fallback to the API client), the layout that keeps the navbar while a page loads, the fade-in items, and the static hero staying in sync with the real one.
+- **Start-up**: the early book request started by `index.html` (used once, with a fallback to the API client), the layout that keeps the navbar while a page loads, the fade-in items, the static hero staying in sync with the real one, and the plugin that inlines the stylesheet.
 - **API contract**: every function in `src/lib/api` is checked for the path, method, query string, body and envelope part it sends and returns.
 - **Resilience**: the error boundary fallback, "not found" versus generic error states on the book and author pages, the API client (status-preserving errors, Bearer token, 401 logout) and the retry policy (4xx answers are not retried).
 - **Admin forms**: the cover-image controls in the book form.
@@ -132,25 +132,25 @@ Lighthouse results for the [live site](https://library-web-by-yusuf.vercel.app/)
 
 | | 📱 Mobile | 🖥️ Desktop |
 | --- | :---: | :---: |
-| **Performance** | **96** | **100** |
+| **Performance** | **97** | **100** |
 | **Accessibility** | **100** | **100** |
 | **Best practices** | **100** | **100** |
 | **SEO** | **100** | **100** |
 
-Mobile performance ranged from 89 to 97 across the 10 runs (median 95.5); desktop from 98 to 100.
+Mobile performance ranged from 89 to 99 across the 10 runs; desktop scored 100 in all 6.
 
 ### Core metrics
 
 | Metric | 📱 Mobile | 🖥️ Desktop | Good if |
 | --- | :---: | :---: | :---: |
-| **Largest Contentful Paint** (main content visible) | 🟢 2.3 s | 🟢 0.7 s | ≤ 2.5 s |
-| **Total Blocking Time** (page unresponsive) | 🟢 81 ms | 🟢 0 ms | ≤ 200 ms |
+| **First Contentful Paint** (first pixels) | 🟢 1.1 s | 🟢 0.4 s | ≤ 1.8 s |
+| **Largest Contentful Paint** (main content visible) | 🟢 1.4 s | 🟢 0.6 s | ≤ 2.5 s |
+| **Total Blocking Time** (page unresponsive) | 🟢 196 ms | 🟢 0 ms | ≤ 200 ms |
 | **Cumulative Layout Shift** (content jumping) | 🟢 0 | 🟢 0 | ≤ 0.1 |
-| **Speed Index** (how fast it fills in) | 🟢 3.2 s | 🟢 0.8 s | ≤ 3.4 s |
-| **First Contentful Paint** (first pixels) | 🟠 2.1 s | 🟢 0.6 s | ≤ 1.8 s |
-| **Page weight** (home page, compressed) | 499 KiB | 515 KiB | |
+| **Speed Index** (how fast it fills in) | 🟢 2.2 s | 🟢 0.7 s | ≤ 3.4 s |
+| **Page weight** (home page, compressed) | 531 KiB | 515 KiB | |
 
-🟢 within Google's "good" range · 🟠 needs improvement
+🟢 within Google's "good" range · figures are medians
 
 ### What "mobile" means in this test
 
@@ -166,7 +166,7 @@ Run it yourself with [PageSpeed Insights](https://pagespeed.web.dev/analysis?url
 
 ### How it stays fast
 
-- **Start-up**: `index.html` connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar and hero shell is painted straight away (the hero is removed on other pages, and a test keeps it identical to `HeroSection`), the toast library loads only when needed, and the first render runs inside a React transition so it is split into short tasks instead of one long block.
+- **Start-up**: the build inlines the stylesheet into `index.html` ([plugins/inlineCss.ts](plugins/inlineCss.ts)) so the first paint never waits on a separate render-blocking request, and the hero image is preloaded from the top of the `<head>`. `index.html` also connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar and hero shell is painted straight away (the hero is removed on other pages, and a test keeps it identical to `HeroSection`), the toast library loads only when needed, and the first render runs inside a React transition so it is split into short tasks instead of one long block.
 - **Cover images** are requested at about twice their displayed size in a modern format: Cloudinary through `f_auto,q_auto,c_limit`, and Gramedia and Amazon covers through their own size parameters (`src/lib/imageUrl.ts`). The first four covers load eagerly with a high fetch priority; the rest are lazy-loaded. A 2.2 MB cover becomes about 35 KB.
 - **Hero banner** is a responsive WebP (`srcset` with 640, 800 and 1200 px variants) with `fetchpriority="high"` and declared dimensions.
 - **Motion**: items fade in over 600 ms as they scroll into view; the navbar, hero, categories and the first four books appear immediately.
@@ -198,6 +198,7 @@ A book update that includes a new cover is sent as two requests: the fields as J
 ## Project structure
 
 ```
+plugins/            # Vite build plugin that inlines the stylesheet
 src/
 ├── app/            # Redux store and typed hooks
 ├── components/
