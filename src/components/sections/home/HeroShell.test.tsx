@@ -16,6 +16,16 @@ describe('static hero in index.html', () => {
     }
   );
 
+  it('is preloaded from the head with the same sources, sizes and priority', () => {
+    const preload = shell.querySelector('link[rel="preload"][as="image"]') as HTMLLinkElement;
+
+    expect(preload).not.toBeNull();
+    expect(preload.getAttribute('href')).toBe(shellHero().getAttribute('src'));
+    expect(preload.getAttribute('imagesrcset')).toBe(shellHero().getAttribute('srcset'));
+    expect(preload.getAttribute('imagesizes')).toBe(shellHero().getAttribute('sizes'));
+    expect(preload.getAttribute('fetchpriority')).toBe('high');
+  });
+
   it('sits in the same page container as the home page content', () => {
     const container = shell.querySelector('#shell-hero')?.getAttribute('class');
     expect(container).toBeTruthy();

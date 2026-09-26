@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Hero image -->
+    <link
+      rel="preload"
+      as="image"
+      href="/src/assets/images/hero-banner-home-1200.webp"
+      imagesrcset="/src/assets/images/hero-banner-home-640.webp 640w, /src/assets/images/hero-banner-home-800.webp 800w, /src/assets/images/hero-banner-home-1200.webp 1200w"
+      imagesizes="(min-width: 1280px) 1200px, calc(100vw - 32px)"
+      fetchpriority="high"
+    />
     <!-- Early data -->
     <link rel="preconnect" href="%VITE_API_URL%" crossorigin />
     <link rel="preconnect" href="https://res.cloudinary.com" />
