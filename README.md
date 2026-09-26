@@ -127,7 +127,7 @@ GitHub Actions runs lint, type-check, tests and the production build on every pu
 
 ## Performance
 
-- **Start-up**: `index.html` connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar and hero shell is painted straight away (the hero is removed on other pages, and a test keeps it identical to `HeroSection`), and the toast library loads only when needed.
+- **Start-up**: `index.html` connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar and hero shell is painted straight away (the hero is removed on other pages, and a test keeps it identical to `HeroSection`), the toast library loads only when needed, and the first render runs inside a React transition so it is split into short tasks instead of one long block.
 - **Cover images** are requested at about twice their displayed size in a modern format: Cloudinary through `f_auto,q_auto,c_limit`, and Gramedia and Amazon covers through their own size parameters (`src/lib/imageUrl.ts`). The first four covers load eagerly with a high fetch priority; the rest are lazy-loaded. A 2.2 MB cover becomes about 35 KB.
 - **Hero banner** is a responsive WebP (`srcset` with 640, 800 and 1200 px variants) with `fetchpriority="high"` and declared dimensions.
 - **Motion**: items fade in over 600 ms as they scroll into view; the navbar, hero, categories and the first four books appear immediately.
@@ -153,6 +153,8 @@ The app talks to a separate REST API (Express, Prisma and PostgreSQL). It publis
 | Admin | `GET /admin/books`, `GET /admin/users`, `GET /admin/loans`, `PATCH /admin/loans/:id`, `POST /books`, `PUT /books/:id`, `DELETE /books/:id` |
 
 Reviews are only accepted for books the user has borrowed and returned. There is no update route for reviews: editing one sends `POST /reviews` again for the same book.
+
+A book update that includes a new cover is sent as two requests: the fields as JSON, then the cover alone as multipart. The API answers `500` to a multipart update that carries `publishedYear`.
 
 ## Project structure
 
@@ -181,7 +183,7 @@ src/
 
 ## Deployment
 
-Deployed on Vercel. [vercel.json](vercel.json) rewrites every path to `index.html` so direct links and page refreshes work with client-side routing. Set `VITE_API_URL` in the Vercel project's environment variables.
+Deployed on Vercel. [vercel.json](vercel.json) rewrites every path to `index.html` so direct links and page refreshes work with client-side routing, and serves the hashed files under `/assets` with long-lived cache headers. Set `VITE_API_URL` in the Vercel project's environment variables.
 
 ## Author
 
