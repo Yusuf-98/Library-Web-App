@@ -14,7 +14,7 @@ To try the reader flow (cart, checkout, loans, reviews), create an account on th
   <img src="docs/screenshots/home-hero.png" alt="Booky home page with hero banner and book categories" width="820">
 </p>
 
-[![Lighthouse](https://img.shields.io/badge/Lighthouse-97_mobile_%C2%B7_100_desktop-brightgreen?logo=lighthouse&logoColor=white)](#performance)
+[![Lighthouse](https://img.shields.io/badge/Lighthouse-99_mobile_%C2%B7_100_desktop-brightgreen?logo=lighthouse&logoColor=white)](#performance)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
@@ -128,27 +128,27 @@ GitHub Actions runs lint, type-check, tests and the production build on every pu
 
 ## Performance
 
-Lighthouse results for the [live site](https://library-web-by-yusuf.vercel.app/): the median of 10 mobile and 6 desktop runs on 26 September 2026 (Lighthouse 13.5.0).
+Lighthouse results for the [live site](https://library-web-by-yusuf.vercel.app/): the median of 10 mobile and 6 desktop runs on 6 October 2026 (Lighthouse 13.5.0).
 
 | | 📱 Mobile | 🖥️ Desktop |
 | --- | :---: | :---: |
-| **Performance** | **97** | **100** |
+| **Performance** | **99** | **100** |
 | **Accessibility** | **100** | **100** |
 | **Best practices** | **100** | **100** |
 | **SEO** | **100** | **100** |
 
-Mobile performance ranged from 89 to 99 across the 10 runs; desktop scored 100 in all 6.
+Mobile performance scored 98 or 99 in all 10 runs (median 98.5); desktop scored 100 in all 6.
 
 ### Core metrics
 
 | Metric | 📱 Mobile | 🖥️ Desktop | Good if |
 | --- | :---: | :---: | :---: |
 | **First Contentful Paint** (first pixels) | 🟢 1.1 s | 🟢 0.4 s | ≤ 1.8 s |
-| **Largest Contentful Paint** (main content visible) | 🟢 1.4 s | 🟢 0.6 s | ≤ 2.5 s |
-| **Total Blocking Time** (page unresponsive) | 🟢 196 ms | 🟢 0 ms | ≤ 200 ms |
+| **Largest Contentful Paint** (main content visible) | 🟢 1.2 s | 🟢 0.6 s | ≤ 2.5 s |
+| **Total Blocking Time** (page unresponsive) | 🟢 131 ms | 🟢 0 ms | ≤ 200 ms |
 | **Cumulative Layout Shift** (content jumping) | 🟢 0 | 🟢 0 | ≤ 0.1 |
 | **Speed Index** (how fast it fills in) | 🟢 2.2 s | 🟢 0.7 s | ≤ 3.4 s |
-| **Page weight** (home page, compressed) | 531 KiB | 515 KiB | |
+| **Page weight** (home page, compressed) | 527 KiB | 523 KiB | |
 
 🟢 within Google's "good" range · figures are medians
 
@@ -170,6 +170,7 @@ Run it yourself with [PageSpeed Insights](https://pagespeed.web.dev/analysis?url
 - **Cover images** are requested at about twice their displayed size in a modern format: Cloudinary through `f_auto,q_auto,c_limit`, and Gramedia and Amazon covers through their own size parameters (`src/lib/imageUrl.ts`). The first four covers load eagerly with a high fetch priority; the rest are lazy-loaded. A 2.2 MB cover becomes about 35 KB.
 - **Hero banner** is a responsive WebP (`srcset` with 640, 800 and 1200 px variants) with `fetchpriority="high"` and declared dimensions.
 - **Motion**: items fade in over 600 ms as they scroll into view; the navbar, hero, categories and the first four books appear immediately.
+- **Offscreen sections** (popular authors and the footer) use `content-visibility: auto` with measured size estimates, so the browser skips their layout and paint until they are close to the viewport.
 - **Loading skeletons** have exactly the same box model as the cards they stand in for, so nothing shifts when data arrives.
 - **Caching**: hashed files under `/assets` are served as immutable ([vercel.json](vercel.json)), so a returning visit does not revalidate them.
 - **Requests** are kept lean: search is debounced, 4xx answers are not retried, and routes are code-split.
