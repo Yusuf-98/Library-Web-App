@@ -67,7 +67,7 @@ Access is split into three levels in [src/App.tsx](src/App.tsx): public pages, p
 - **React 19** + **TypeScript** + **Vite**
 - **TanStack Query** for server state (fetching, caching, mutations)
 - **Redux Toolkit** for auth and UI state
-- **React Router** for routing, with route-level code splitting
+- **React Router** for routing, with route-level code splitting (the home page ships in the main bundle)
 - **Tailwind CSS v4** + **Radix UI** (shadcn/ui) for styling and accessible primitives
 - **Axios** for the API client
 - **Vitest** + **React Testing Library** for tests, **GitHub Actions** for CI
@@ -128,7 +128,7 @@ GitHub Actions runs lint, type-check, tests and the production build on every pu
 
 ## Performance
 
-Lighthouse results for the [live site](https://library-web-by-yusuf.vercel.app/): the median of 10 mobile and 6 desktop runs on 6 October 2026 (Lighthouse 13.5.0).
+Lighthouse results for the [live site](https://library-web-by-yusuf.vercel.app/): the median of 10 mobile and 6 desktop runs of the Lighthouse 13.5.0 CLI with its default mobile and desktop settings, on 6 October 2026.
 
 | | 📱 Mobile | 🖥️ Desktop |
 | --- | :---: | :---: |
@@ -166,14 +166,14 @@ Run it yourself with [PageSpeed Insights](https://pagespeed.web.dev/analysis?url
 
 ### How it stays fast
 
-- **Start-up**: the build inlines the stylesheet into `index.html` ([plugins/inlineCss.ts](plugins/inlineCss.ts)) so the first paint never waits on a separate render-blocking request, and the hero image is preloaded from the top of the `<head>`. `index.html` also connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar and hero shell is painted straight away (the hero is removed on other pages, and a test keeps it identical to `HeroSection`), the toast library loads only when needed, and the first render runs inside a React transition so it is split into short tasks instead of one long block.
+- **Start-up**: the build inlines the stylesheet into `index.html` ([plugins/inlineCss.ts](plugins/inlineCss.ts)) so the first paint never waits on a separate render-blocking request, and the hero image is preloaded from the top of the `<head>`. `index.html` also connects to the API and Cloudinary and starts the first `/books` request before any JavaScript runs; the home page picks that response up instead of asking again, and falls back to a normal request if it failed. A static navbar and hero shell is painted straight away (the hero is removed on other pages, and a test keeps it identical to `HeroSection`), the toast library is split into its own chunk and loaded after the first render, and the first render runs inside a React transition so it is split into short tasks instead of one long block.
 - **Cover images** are requested at about twice their displayed size in a modern format: Cloudinary through `f_auto,q_auto,c_limit`, and Gramedia and Amazon covers through their own size parameters (`src/lib/imageUrl.ts`). The first four covers load eagerly with a high fetch priority; the rest are lazy-loaded. A 2.2 MB cover becomes about 35 KB.
 - **Hero banner** is a responsive WebP (`srcset` with 640, 800 and 1200 px variants) with `fetchpriority="high"` and declared dimensions.
 - **Motion**: items fade in over 600 ms as they scroll into view; the navbar, hero, categories and the first four books appear immediately.
 - **Offscreen sections** (popular authors and the footer) use `content-visibility: auto` with measured size estimates, so the browser skips their layout and paint until they are close to the viewport.
 - **Loading skeletons** have exactly the same box model as the cards they stand in for, so nothing shifts when data arrives.
 - **Caching**: hashed files under `/assets` are served as immutable ([vercel.json](vercel.json)), so a returning visit does not revalidate them.
-- **Requests** are kept lean: search is debounced, 4xx answers are not retried, and routes are code-split.
+- **Requests** are kept lean: search is debounced, 4xx answers are not retried, and every route except the home page is code-split.
 
 ## API
 
