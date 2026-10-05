@@ -27,7 +27,7 @@ export default function Footer({ className, onLogoClick }: FooterProps) {
     <FadeIn className='w-full'>
       <footer
         className={cn(
-          'bg-white border-t border-neutral-300 flex flex-col items-center px-4 py-10 md:flex-row md:justify-center md:px-37.5 md:py-20 mt-4 md:mt-23',
+          '[content-visibility:auto] [contain-intrinsic-size:auto_330px] md:[contain-intrinsic-size:auto_385px] bg-white border-t border-neutral-300 flex flex-col items-center px-4 py-10 md:flex-row md:justify-center md:px-37.5 md:py-20 mt-4 md:mt-23',
           className
         )}
       >

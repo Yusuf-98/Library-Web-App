@@ -20,7 +20,7 @@ export default function PopularAuthorsSection() {
   });
 
   return (
-    <section className='flex flex-col gap-4'>
+    <section className='flex flex-col gap-4 [content-visibility:auto] [contain-intrinsic-size:auto_1070px] md:[contain-intrinsic-size:auto_430px]'>
       {/* Title */}
       <FadeInUp>
         <h2 className='text-display-xs md:text-[clamp(24px,calc(10.29px+1.786vw),36px)] font-bold text-neutral-950 tracking-t-2'>
